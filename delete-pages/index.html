@@ -1,40 +1,153 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HappyEdit — Delete PDF Pages</title>
-  <meta name="description" content="Remove unwanted pages from a PDF file directly in your browser.">
-  <link rel="stylesheet" href="../assets/styles.css">
+  <meta name="description" content="Remove unwanted pages from a PDF file directly in your browser. All processing happens locally.">
   <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/styles.css">
+
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.18), transparent 10%),
+                  radial-gradient(1000px 500px at 90% 90%, rgba(45,212,191,0.12), transparent 12%),
+                  linear-gradient(180deg,#0f172a,#0b3e6b);
+      color: white;
+      min-height: 100vh;
+      margin: 0;
+      padding: 32px 20px;
+    }
+
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:32px;
+    }
+    header .logo{
+      font-size:1.8rem;
+      font-weight:700;
+      color:#fff;
+      text-decoration:none;
+    }
+    header nav a{
+      color: rgba(255,255,255,0.85);
+      text-decoration:none;
+      font-weight:600;
+    }
+    header nav a:hover{color:#7b61ff;}
+
+    h1{margin-bottom:12px;}
+    p.lead{color:rgba(255,255,255,0.85); margin-bottom:20px;}
+
+    .card {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.08);
+      padding:20px;
+      box-shadow:0 10px 30px rgba(2,6,23,0.55);
+      transition: transform 0.22s, box-shadow 0.22s;
+      margin-bottom:20px;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+    }
+
+    label.file-label{
+      display:block;
+      margin-bottom:12px;
+      font-weight:600;
+      font-size:14px;
+    }
+    input[type="file"]{
+      width:100%;
+      padding:8px 12px;
+      border-radius:10px;
+      border:none;
+      margin-top:4px;
+    }
+
+    .page-list{
+      margin:14px 0;
+      max-height:300px;
+      overflow-y:auto;
+    }
+    .page-row{
+      margin-bottom:6px;
+    }
+
+    .btn, .btn-primary {
+      cursor:pointer;
+      padding:10px 16px;
+      border-radius:12px;
+      border:none;
+      font-weight:700;
+      transition: transform 0.18s;
+      text-decoration:none;
+      text-align:center;
+      display:inline-block;
+      margin-top:8px;
+    }
+    .btn{
+      background: rgba(255,255,255,0.08);
+      color:#fff;
+    }
+    .btn:hover{transform: translateY(-2px);}
+    .btn-primary{
+      background: linear-gradient(90deg, #7b61ff, #2dd4bf);
+      color:#041124;
+    }
+
+    footer{
+      text-align:center;
+      color: rgba(255,255,255,0.78);
+      margin-top:40px;
+      font-size:0.9rem;
+    }
+
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <a class="logo" href="../">HappyEdit</a>
-    <nav><a href="../">Home</a></nav>
-  </header>
+  <div class="wrap">
+    <header>
+      <a class="logo" href="../">HappyEdit</a>
+      <nav><a href="../">Home</a></nav>
+    </header>
 
-  <main class="container">
-    <h1>Delete Pages</h1>
-    <p class="lead">Uncheck the pages you want to remove and export the cleaned PDF.</p>
+    <main>
+      <h1>Delete Pages</h1>
+      <p class="lead">Uncheck the pages you want to remove and export the cleaned PDF.</p>
 
-    <div class="card">
-      <label class="file-label">
-        <input id="fileInput" type="file" accept="application/pdf">
-        <span>Upload PDF</span>
-      </label>
+      <div class="card">
+        <label class="file-label">
+          Upload PDF
+          <input id="fileInput" type="file" accept="application/pdf">
+        </label>
 
-      <div id="pageList" class="page-list"></div>
+        <div id="pageList" class="page-list"></div>
 
-      <div class="actions">
-        <button id="exportBtn" class="btn btn-primary" disabled>Export PDF (remove unchecked)</button>
+        <button id="exportBtn" class="btn-primary" disabled>Export PDF (remove unchecked)</button>
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer class="site-footer">© 2025 HappyEdit</footer>
+    <footer>© 2025 HappyEdit — Files processed locally in your browser</footer>
+  </div>
 
 <script>
 const { PDFDocument } = PDFLib;
