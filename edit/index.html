@@ -1,35 +1,157 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HappyEdit — PDF Editor</title>
-  <meta name="description" content="Edit PDF online: add watermark text, rotate pages, and download. All in your browser.">
-  <link rel="stylesheet" href="../assets/styles.css">
-  <link rel="icon" href="../assets/favicon.png" type="image/png">
-  <!-- pdf-lib -->
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <!-- pdf.js for preview -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HappyEdit — PDF Editor</title>
+<meta name="description" content="Edit PDF online: add watermark text, rotate pages, and download. All in your browser.">
+<link rel="icon" href="../assets/favicon.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+
+<!-- pdf-lib -->
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<!-- pdf.js for preview -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
+<style>
+  body {
+    font-family: 'Inter', sans-serif;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(123,97,255,0.18), transparent 10%),
+                radial-gradient(1000px 500px at 90% 90%, rgba(45,212,191,0.12), transparent 12%),
+                linear-gradient(180deg,#0f172a,#0b3e6b);
+    color: white;
+    min-height: 100vh;
+    margin: 0;
+    padding: 32px 20px;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 10;
+  }
+
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:32px;
+  }
+  header .logo{
+    font-size:1.8rem;
+    font-weight:700;
+    color:#fff;
+    text-decoration:none;
+  }
+  header nav a{
+    color: rgba(255,255,255,0.85);
+    text-decoration:none;
+    font-weight:600;
+  }
+  header nav a:hover{color:#7b61ff;}
+
+  h1{margin-bottom:12px;}
+  p.lead{color:rgba(255,255,255,0.85); margin-bottom:20px;}
+
+  .card {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,0.08);
+    padding:20px;
+    box-shadow:0 10px 30px rgba(2,6,23,0.55);
+    transition: transform 0.22s, box-shadow 0.22s;
+    margin-bottom:20px;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+  }
+
+  label.file-label{
+    display:block;
+    margin-bottom:12px;
+    font-weight:600;
+    font-size:14px;
+  }
+  input[type="file"], input[type="text"], select{
+    width:100%;
+    padding:8px 12px;
+    border-radius:10px;
+    border:none;
+    margin-top:4px;
+  }
+
+  .controls-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:14px 0;
+  }
+  .btn, .btn-primary {
+    cursor:pointer;
+    padding:10px 16px;
+    border-radius:12px;
+    border:none;
+    font-weight:700;
+    transition: transform 0.18s;
+    text-decoration:none;
+    text-align:center;
+    display:inline-block;
+  }
+  .btn{
+    background: rgba(255,255,255,0.08);
+    color:#fff;
+  }
+  .btn:hover{transform: translateY(-2px);}
+  .btn-primary{
+    background: linear-gradient(90deg, #7b61ff, #2dd4bf);
+    color:#041124;
+  }
+
+  #preview{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:14px;
+  }
+  #preview canvas{
+    border-radius:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    width:150px;
+    height:auto;
+  }
+
+  footer{
+    text-align:center;
+    color: rgba(255,255,255,0.78);
+    margin-top:40px;
+    font-size:0.9rem;
+  }
+</style>
 </head>
 <body>
-  <header class="site-header">
+<div class="wrap">
+  <header>
     <a class="logo" href="../">HappyEdit</a>
     <nav><a href="../">Home</a></nav>
   </header>
 
-  <main class="container">
+  <main>
     <h1>PDF Editor</h1>
-    <p class="lead">Add watermark text or rotate pages. Files are processed in your browser — not uploaded.</p>
+    <p class="lead">Add watermark text or rotate pages. Files are processed in your browser — no upload.</p>
 
     <div class="card">
       <label class="file-label">
+        Upload PDF
         <input id="fileInput" type="file" accept="application/pdf">
-        <span>Upload PDF</span>
       </label>
 
       <div class="controls-row">
-        <input id="watermarkText" placeholder="Watermark text (e.g. CONFIDENTIAL)" />
+        <input id="watermarkText" type="text" placeholder="Watermark text (e.g. CONFIDENTIAL)" />
         <select id="position">
           <option value="center">Center</option>
           <option value="top-left">Top-left</option>
@@ -41,24 +163,22 @@
         <button id="rotatePages" class="btn">Rotate +90°</button>
       </div>
 
-      <div id="preview" class="preview-grid"></div>
+      <div id="preview"></div>
 
       <div class="actions">
-        <button id="downloadBtn" class="btn btn-primary" disabled>Download Edited PDF</button>
+        <button id="downloadBtn" class="btn-primary" disabled>Download Edited PDF</button>
       </div>
     </div>
   </main>
 
-  <footer class="site-footer">© 2025 HappyEdit. All actions run in your browser.</footer>
+  <footer>© 2025 HappyEdit — Files processed locally in your browser</footer>
+</div>
 
 <script>
 const { PDFDocument, StandardFonts } = PDFLib;
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
 let originalArrayBuffer = null;
-let loadedPdfDoc = null;
-let rotated = false;
-
 const fileInput = document.getElementById('fileInput');
 const preview = document.getElementById('preview');
 const downloadBtn = document.getElementById('downloadBtn');
@@ -68,84 +188,72 @@ const rotateBtn = document.getElementById('rotatePages');
 
 fileInput.addEventListener('change', async (e) => {
   const file = e.target.files[0];
-  if (!file) return;
+  if(!file) return;
   originalArrayBuffer = await file.arrayBuffer();
   await renderPreview(originalArrayBuffer);
   downloadBtn.disabled = false;
 });
 
-async function renderPreview(arrayBuffer) {
+async function renderPreview(arrayBuffer){
   preview.innerHTML = '';
-  const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
-  const pdf = await loadingTask.promise;
-  for (let i = 1; i <= pdf.numPages; i++) {
+  const pdf = await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+  for(let i=1;i<=pdf.numPages;i++){
     const page = await pdf.getPage(i);
-    const viewport = page.getViewport({scale: 0.6});
-    const canvas = document.createElement('canvas');
-    canvas.className = 'thumb';
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    const ctx = canvas.getContext('2d');
-    await page.render({canvasContext: ctx, viewport}).promise;
-    const caption = document.createElement('div');
-    caption.className = 'thumb-caption';
-    caption.textContent = 'Page ' + i;
-    const wrap = document.createElement('div');
-    wrap.appendChild(canvas);
-    wrap.appendChild(caption);
-    preview.appendChild(wrap);
+    const viewport = page.getViewport({scale:0.6});
+    const canvas=document.createElement('canvas');
+    canvas.width=viewport.width;
+    canvas.height=viewport.height;
+    const ctx=canvas.getContext('2d');
+    await page.render({canvasContext:ctx,viewport}).promise;
+    preview.appendChild(canvas);
   }
 }
 
-applyWatermarkBtn.addEventListener('click', async () => {
-  if (!originalArrayBuffer) return alert('Please upload a PDF first.');
+applyWatermarkBtn.addEventListener('click', async ()=>{
+  if(!originalArrayBuffer) return alert('Please upload a PDF first.');
   const text = watermarkText.value.trim();
-  if (!text) return alert('Enter watermark text.');
+  if(!text) return alert('Enter watermark text.');
   const pdfDoc = await PDFDocument.load(originalArrayBuffer);
   const pages = pdfDoc.getPages();
   const helvetica = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  pages.forEach((page) => {
-    const { width, height } = page.getSize();
-    const fontSize = Math.max(24, Math.min(72, Math.floor(Math.min(width, height) / 10)));
-    page.drawText(text, {
-      x: width / 2 - (helvetica.widthOfTextAtSize(text, fontSize) / 2),
-      y: height / 2 - fontSize / 2,
+  pages.forEach(page=>{
+    const {width,height}=page.getSize();
+    const fontSize=Math.max(24,Math.min(72,Math.floor(Math.min(width,height)/10)));
+    page.drawText(text,{
+      x: width/2 - (helvetica.widthOfTextAtSize(text,fontSize)/2),
+      y: height/2 - fontSize/2,
       size: fontSize,
       font: helvetica,
-      opacity: 0.15,
-      rotate: { degrees: -30 }
+      opacity:0.15,
+      rotate:{degrees:-30}
     });
   });
-  const modified = await pdfDoc.save();
-  originalArrayBuffer = modified; // set for further ops
-  await renderPreview(modified);
-  alert('Watermark added. You can download the file now.');
+  originalArrayBuffer = await pdfDoc.save();
+  await renderPreview(originalArrayBuffer);
+  alert('Watermark added.');
 });
 
-rotateBtn.addEventListener('click', async () => {
-  if (!originalArrayBuffer) return alert('Please upload a PDF first.');
+rotateBtn.addEventListener('click', async ()=>{
+  if(!originalArrayBuffer) return alert('Please upload a PDF first.');
   const pdfDoc = await PDFDocument.load(originalArrayBuffer);
-  const pages = pdfDoc.getPages();
-  pages.forEach(page => {
-    const current = page.getRotation().angle || 0;
-    page.setRotation((current + 90) % 360);
+  pdfDoc.getPages().forEach(page=>{
+    const current=page.getRotation().angle||0;
+    page.setRotation((current+90)%360);
   });
-  const modified = await pdfDoc.save();
-  originalArrayBuffer = modified;
-  await renderPreview(modified);
+  originalArrayBuffer = await pdfDoc.save();
+  await renderPreview(originalArrayBuffer);
 });
 
-downloadBtn.addEventListener('click', async () => {
-  if (!originalArrayBuffer) return;
-  const blob = new Blob([originalArrayBuffer], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'happyedit-edited.pdf';
+downloadBtn.addEventListener('click', ()=>{
+  if(!originalArrayBuffer) return;
+  const blob = new Blob([originalArrayBuffer],{type:'application/pdf'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='happyedit-edited.pdf';
   document.body.appendChild(a);
   a.click();
   a.remove();
-  URL.revokeObjectURL(url);
+  URL.revokeObjectURL(a.href);
 });
 </script>
 </body>
