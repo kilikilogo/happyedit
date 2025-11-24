@@ -1,1 +1,107 @@
-"<!DOCTYPE html><html><head><title>Decrypt PDF</title></head><body><h1>Decrypt PDF</h1></body></html>" 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — Unlock PDF</title>
+  <meta name="description" content="Remove password protection from PDF (if you know the password). The resulting PDF is reconstructed as images (keeps visual pages).">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../">HappyEdit</a>
+    <nav><a href="../">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>Unlock PDF (Remove Password)</h1>
+    <p class="lead">If you know the password, upload the file and enter the password. The site will recreate the PDF pages as images and produce an unlocked PDF.</p>
+
+    <div class="card">
+      <label class="file-label">Encrypted PDF
+        <input id="encFile" type="file" accept="application/pdf">
+      </label>
+
+      <input id="pwd" placeholder="Enter password" type="password" />
+
+      <div class="actions">
+        <button id="unlockBtn" class="btn btn-primary" disabled>Unlock & Rebuild</button>
+      </div>
+
+      <div id="progress" style="margin-top:12px;color:#666"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">© 2025 HappyEdit</footer>
+
+<script>
+const { PDFDocument } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+const encFileEl = document.getElementById('encFile');
+const pwdEl = document.getElementById('pwd');
+const unlockBtn = document.getElementById('unlockBtn');
+const progress = document.getElementById('progress');
+
+let encBuffer = null;
+
+encFileEl.addEventListener('change', async () => {
+  if (!encFileEl.files[0]) return;
+  encBuffer = await encFileEl.files[0].arrayBuffer();
+  unlockBtn.disabled = false;
+});
+
+unlockBtn.addEventListener('click', async () => {
+  if (!encBuffer) return;
+  const password = pwdEl.value || '';
+  progress.textContent = 'Loading PDF (attempting to decrypt)...';
+  try {
+    // Try to open with pdf.js with password
+    const loadingTask = pdfjsLib.getDocument({ data: encBuffer, password });
+    const pdf = await loadingTask.promise;
+    const num = pdf.numPages;
+    progress.textContent = `PDF decrypted. Rendering ${num} pages to images... This may take a while.`;
+    // render each page to canvas and collect images
+    const images = [];
+    for (let i=1;i<=num;i++) {
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      const ctx = canvas.getContext('2d');
+      await page.render({ canvasContext: ctx, viewport }).promise;
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+      images.push({dataUrl, width: canvas.width, height: canvas.height});
+      progress.textContent = `Rendered ${i}/${num} pages...`;
+      await new Promise(r => setTimeout(r, 50));
+    }
+    progress.textContent = 'Rebuilding PDF (images -> pages)...';
+    const outPdf = await PDFDocument.create();
+    for (const img of images) {
+      const imgBytes = await fetch(img.dataUrl).then(r => r.arrayBuffer());
+      const jpg = await outPdf.embedJpg(imgBytes);
+      const page = outPdf.addPage([img.width, img.height]);
+      page.drawImage(jpg, { x: 0, y: 0, width: img.width, height: img.height });
+    }
+    const outBytes = await outPdf.save();
+    const blob = new Blob([outBytes], {type: 'application/pdf'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'happyedit-unlocked.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    progress.textContent = 'Done. Download should start. Note: output pages are images (text not selectable).';
+  } catch (err) {
+    console.error(err);
+    alert('Failed to decrypt/open PDF. Make sure the password is correct and the file is a supported PDF.');
+    progress.textContent = '';
+  }
+});
+</script>
+</body>
+</html>

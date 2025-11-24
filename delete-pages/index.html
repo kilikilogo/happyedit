@@ -1,1 +1,86 @@
-"<!DOCTYPE html><html><head><title>Delete Pages</title></head><body><h1>Delete Pages</h1></body></html>" 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — Delete PDF Pages</title>
+  <meta name="description" content="Remove unwanted pages from a PDF file directly in your browser.">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../">HappyEdit</a>
+    <nav><a href="../">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>Delete Pages</h1>
+    <p class="lead">Uncheck the pages you want to remove and export the cleaned PDF.</p>
+
+    <div class="card">
+      <label class="file-label">
+        <input id="fileInput" type="file" accept="application/pdf">
+        <span>Upload PDF</span>
+      </label>
+
+      <div id="pageList" class="page-list"></div>
+
+      <div class="actions">
+        <button id="exportBtn" class="btn btn-primary" disabled>Export PDF (remove unchecked)</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">© 2025 HappyEdit</footer>
+
+<script>
+const { PDFDocument } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+const fileInputEl = document.getElementById('fileInput');
+const pageListEl = document.getElementById('pageList');
+const exportBtnEl = document.getElementById('exportBtn');
+let buffer = null;
+let totalPages = 0;
+
+fileInputEl.addEventListener('change', async () => {
+  const f = fileInputEl.files[0];
+  if (!f) return;
+  buffer = await f.arrayBuffer();
+  const loading = pdfjsLib.getDocument({data: buffer});
+  const pdf = await loading.promise;
+  totalPages = pdf.numPages;
+  pageListEl.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const row = document.createElement('div');
+    row.className = 'page-row';
+    row.innerHTML = `<label><input type="checkbox" value="${i}" checked /> Page ${i}</label>`;
+    pageListEl.appendChild(row);
+  }
+  exportBtnEl.disabled = false;
+});
+
+exportBtnEl.addEventListener('click', async () => {
+  const checked = Array.from(pageListEl.querySelectorAll('input:checked')).map(i => parseInt(i.value,10)-1);
+  if (!checked.length) return alert('Select pages to keep.');
+  const src = await PDFDocument.load(buffer);
+  const dst = await PDFDocument.create();
+  const copied = await dst.copyPages(src, checked);
+  copied.forEach(p => dst.addPage(p));
+  const out = await dst.save();
+  const blob = new Blob([out], {type: 'application/pdf'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'happyedit-cleaned.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

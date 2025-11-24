@@ -1,1 +1,88 @@
-"<!DOCTYPE html><html><head><title>PDF Split</title></head><body><h1>PDF Split</h1></body></html>" 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — Split PDF</title>
+  <meta name="description" content="Split PDF into separate files by selecting pages.">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../">HappyEdit</a>
+    <nav><a href="../">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>Split PDF</h1>
+    <p class="lead">Select pages to create a new PDF containing only those pages.</p>
+
+    <div class="card">
+      <label class="file-label">
+        <input id="fileInput" type="file" accept="application/pdf">
+        <span>Upload PDF</span>
+      </label>
+
+      <div id="pageList" class="page-list"></div>
+
+      <div class="actions">
+        <button id="exportBtn" class="btn btn-primary" disabled>Export Selected Pages</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">© 2025 HappyEdit</footer>
+
+<script>
+const { PDFDocument } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+const fileInput = document.getElementById('fileInput');
+const pageList = document.getElementById('pageList');
+const exportBtn = document.getElementById('exportBtn');
+
+let fileArrayBuffer = null;
+let numPages = 0;
+
+fileInput.addEventListener('change', async () => {
+  const f = fileInput.files[0];
+  if (!f) return;
+  fileArrayBuffer = await f.arrayBuffer();
+  const loading = pdfjsLib.getDocument({data: fileArrayBuffer});
+  const pdf = await loading.promise;
+  numPages = pdf.numPages;
+  pageList.innerHTML = '';
+  for (let i = 1; i <= numPages; i++) {
+    const item = document.createElement('div');
+    item.className = 'page-row';
+    item.innerHTML = `<label><input type="checkbox" value="${i}" checked /> Page ${i}</label>`;
+    pageList.appendChild(item);
+  }
+  exportBtn.disabled = false;
+});
+
+exportBtn.addEventListener('click', async () => {
+  const checks = pageList.querySelectorAll('input[type=checkbox]:checked');
+  if (!checks.length) return alert('Select at least one page.');
+  const selected = Array.from(checks).map(c => parseInt(c.value,10));
+  const src = await PDFDocument.load(fileArrayBuffer);
+  const dst = await PDFDocument.create();
+  const copied = await dst.copyPages(src, selected.map(n => n-1));
+  copied.forEach(p => dst.addPage(p));
+  const bytes = await dst.save();
+  const blob = new Blob([bytes], {type: 'application/pdf'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'happyedit-split.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>

@@ -1,1 +1,152 @@
-"<!DOCTYPE html><html><head><title>PDF Editor</title></head><body><h1>PDF Editor</h1></body></html>" 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — PDF Editor</title>
+  <meta name="description" content="Edit PDF online: add watermark text, rotate pages, and download. All in your browser.">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <!-- pdf-lib -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <!-- pdf.js for preview -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../">HappyEdit</a>
+    <nav><a href="../">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>PDF Editor</h1>
+    <p class="lead">Add watermark text or rotate pages. Files are processed in your browser — not uploaded.</p>
+
+    <div class="card">
+      <label class="file-label">
+        <input id="fileInput" type="file" accept="application/pdf">
+        <span>Upload PDF</span>
+      </label>
+
+      <div class="controls-row">
+        <input id="watermarkText" placeholder="Watermark text (e.g. CONFIDENTIAL)" />
+        <select id="position">
+          <option value="center">Center</option>
+          <option value="top-left">Top-left</option>
+          <option value="top-right">Top-right</option>
+          <option value="bottom-left">Bottom-left</option>
+          <option value="bottom-right">Bottom-right</option>
+        </select>
+        <button id="applyWatermark" class="btn">Add Watermark</button>
+        <button id="rotatePages" class="btn">Rotate +90°</button>
+      </div>
+
+      <div id="preview" class="preview-grid"></div>
+
+      <div class="actions">
+        <button id="downloadBtn" class="btn btn-primary" disabled>Download Edited PDF</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">© 2025 HappyEdit. All actions run in your browser.</footer>
+
+<script>
+const { PDFDocument, StandardFonts } = PDFLib;
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+let originalArrayBuffer = null;
+let loadedPdfDoc = null;
+let rotated = false;
+
+const fileInput = document.getElementById('fileInput');
+const preview = document.getElementById('preview');
+const downloadBtn = document.getElementById('downloadBtn');
+const watermarkText = document.getElementById('watermarkText');
+const applyWatermarkBtn = document.getElementById('applyWatermark');
+const rotateBtn = document.getElementById('rotatePages');
+
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  originalArrayBuffer = await file.arrayBuffer();
+  await renderPreview(originalArrayBuffer);
+  downloadBtn.disabled = false;
+});
+
+async function renderPreview(arrayBuffer) {
+  preview.innerHTML = '';
+  const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
+  const pdf = await loadingTask.promise;
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({scale: 0.6});
+    const canvas = document.createElement('canvas');
+    canvas.className = 'thumb';
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport}).promise;
+    const caption = document.createElement('div');
+    caption.className = 'thumb-caption';
+    caption.textContent = 'Page ' + i;
+    const wrap = document.createElement('div');
+    wrap.appendChild(canvas);
+    wrap.appendChild(caption);
+    preview.appendChild(wrap);
+  }
+}
+
+applyWatermarkBtn.addEventListener('click', async () => {
+  if (!originalArrayBuffer) return alert('Please upload a PDF first.');
+  const text = watermarkText.value.trim();
+  if (!text) return alert('Enter watermark text.');
+  const pdfDoc = await PDFDocument.load(originalArrayBuffer);
+  const pages = pdfDoc.getPages();
+  const helvetica = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+  pages.forEach((page) => {
+    const { width, height } = page.getSize();
+    const fontSize = Math.max(24, Math.min(72, Math.floor(Math.min(width, height) / 10)));
+    page.drawText(text, {
+      x: width / 2 - (helvetica.widthOfTextAtSize(text, fontSize) / 2),
+      y: height / 2 - fontSize / 2,
+      size: fontSize,
+      font: helvetica,
+      opacity: 0.15,
+      rotate: { degrees: -30 }
+    });
+  });
+  const modified = await pdfDoc.save();
+  originalArrayBuffer = modified; // set for further ops
+  await renderPreview(modified);
+  alert('Watermark added. You can download the file now.');
+});
+
+rotateBtn.addEventListener('click', async () => {
+  if (!originalArrayBuffer) return alert('Please upload a PDF first.');
+  const pdfDoc = await PDFDocument.load(originalArrayBuffer);
+  const pages = pdfDoc.getPages();
+  pages.forEach(page => {
+    const current = page.getRotation().angle || 0;
+    page.setRotation((current + 90) % 360);
+  });
+  const modified = await pdfDoc.save();
+  originalArrayBuffer = modified;
+  await renderPreview(modified);
+});
+
+downloadBtn.addEventListener('click', async () => {
+  if (!originalArrayBuffer) return;
+  const blob = new Blob([originalArrayBuffer], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'happyedit-edited.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+</script>
+</body>
+</html>
