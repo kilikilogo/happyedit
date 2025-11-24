@@ -1,1 +1,147 @@
-"<!DOCTYPE html><html><head><title>Add Pages</title></head><body><h1>Add Pages</h1></body></html>" 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — Add Pages</title>
+  <meta name="description" content="Insert pages into an existing PDF or append pages from another PDF.">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="icon" href="../assets/favicon.png" type="image/png">
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="../">HappyEdit</a>
+    <nav><a href="../">Home</a></nav>
+  </header>
+
+  <main class="container">
+    <h1>Add Pages</h1>
+    <p class="lead">Insert pages from another PDF or add blank pages to your document.</p>
+
+    <div class="card">
+      <label class="file-label">Base PDF
+        <input id="basePdf" type="file" accept="application/pdf">
+      </label>
+
+      <label class="file-label">PDF to insert (optional)
+        <input id="insertPdf" type="file" accept="application/pdf">
+      </label>
+
+      <div class="controls-row">
+        <input id="insertIndex" type="number" min="0" placeholder="Insert at page index (0 = front)" />
+        <input id="blankCount" type="number" min="0" placeholder="Add N blank pages to end" />
+        <button id="doInsert" class="btn">Insert / Append</button>
+      </div>
+
+      <div class="actions">
+        <button id="downloadBtn" class="btn btn-primary" disabled>Download Result</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">© 2025 HappyEdit</footer>
+
+<script>
+const { PDFDocument } = PDFLib;
+
+const basePdfEl = document.getElementById('basePdf');
+const insertPdfEl = document.getElementById('insertPdf');
+const insertIndexEl = document.getElementById('insertIndex');
+const blankCountEl = document.getElementById('blankCount');
+const doInsertBtn = document.getElementById('doInsert');
+const downloadBtn = document.getElementById('downloadBtn');
+
+let baseBuffer = null;
+let insertBuffer = null;
+let resultBytes = null;
+
+basePdfEl.addEventListener('change', async () => {
+  if (!basePdfEl.files[0]) return;
+  baseBuffer = await basePdfEl.files[0].arrayBuffer();
+  downloadBtn.disabled = false;
+});
+insertPdfEl.addEventListener('change', async () => {
+  if (!insertPdfEl.files[0]) return;
+  insertBuffer = await insertPdfEl.files[0].arrayBuffer();
+});
+
+doInsertBtn.addEventListener('click', async () => {
+  if (!baseBuffer) return alert('Upload base PDF first.');
+  const base = await PDFDocument.load(baseBuffer);
+  const out = await PDFDocument.create();
+
+  // copy base pages first
+  const baseCopied = await out.copyPages(base, base.getPageIndices());
+  baseCopied.forEach(p => out.addPage(p));
+
+  // insert PDF pages if provided
+  if (insertBuffer) {
+    const ins = await PDFDocument.load(insertBuffer);
+    const insCopied = await out.copyPages(ins, ins.getPageIndices());
+    const index = Math.max(0, Number(insertIndexEl.value) || 0);
+    // perform insert by rebuilding pages array
+    const allPages = out.getPages();
+    // naive approach: append then reorder
+    insCopied.forEach(p => out.addPage(p));
+    // reorder: create new PDF and re-add pages in desired order
+    const final = await PDFDocument.create();
+    const totalPages = out.getPageCount();
+    // decide order: insert at index => pages 0..index-1, then inserted, then rest
+    // but since we appended inserted pages at end we reconstruct using copies from out
+    const src = await out.save(); // this produces bytes; we'll re-load to get consistent indices
+    const loaded = await PDFDocument.load(src);
+    const loadedIndices = loaded.getPageIndices();
+    // number of original base pages:
+    const nBase = base.getPageCount();
+    // build desired index array
+    const insertionIndex = Math.min(Math.max(0, Number(insertIndexEl.value) || 0), nBase);
+    const indices = [
+      ...Array.from({length: insertionIndex}, (_,i)=>i),
+      ...Array.from({length: ins.getPageCount()}, (_,i)=>nBase + i),
+      ...Array.from({length: nBase - insertionIndex}, (_,i)=>insertionIndex + i)
+    ];
+    const copied = await final.copyPages(loaded, indices);
+    copied.forEach(p => final.addPage(p));
+    // append blank pages if requested
+    const blanks = Math.max(0, Number(blankCountEl.value) || 0);
+    for (let i=0;i<blanks;i++) final.addPage();
+    resultBytes = await final.save();
+  } else {
+    // only base + blank pages
+    const blanks = Math.max(0, Number(blankCountEl.value) || 0);
+    for (let i=0;i<blanks;i++) out.addPage();
+    resultBytes = await out.save();
+  }
+
+  alert('Done — you can download the resulting PDF.');
+  downloadBtn.disabled = false;
+});
+
+downloadBtn.addEventListener('click', () => {
+  if (!resultBytes) {
+    // maybe user didn't insert any file but base exists
+    if (baseBuffer) {
+      const blob = new Blob([baseBuffer], {type: 'application/pdf'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'happyedit-result.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return;
+    }
+    return alert('No result available. Click Insert first.');
+  }
+  const blob = new Blob([resultBytes], {type: 'application/pdf'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'happyedit-added.pdf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+});
+</script>
+</body>
+</html>
