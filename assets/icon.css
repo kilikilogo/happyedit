@@ -1,0 +1,13 @@
+.logo {
+    display: flex;
+    align-items: center; /* 垂直居中（关键，避免图标和文字高低不齐） */
+    gap: 8px; /* 图标和 HappyEdit 文字的间距（可自定义，比如 6px/10px） */
+  }
+  
+  /* 控制 PNG 图标的大小和样式 */
+  .logo-icon {
+    width: 24px; /* 图标大小（按需调整，建议和文字大小匹配） */
+    height: 24px;
+    object-fit: contain; /* 保持 PNG 图标比例，不拉伸 */
+    vertical-align: middle; /* 额外保障对齐（兼容部分场景） */
+  }
