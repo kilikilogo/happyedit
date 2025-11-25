@@ -1,54 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HappyEdit - Edit PDF</title>
-<meta name="description" content="Edit your PDF online: reorder pages, add watermark, delete or insert pages directly in your browser.">
-<meta name="keywords" content="PDF editor, edit PDF online, watermark PDF, reorder PDF pages">
-<meta name="robots" content="index, follow">
-<meta name="google-site-verification" content="YOUR_GSC_CODE_HERE">
-<link rel="stylesheet" href="assets/styles.css">
-<link rel="stylesheet" href="assets/edit.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HappyEdit — Edit PDF</title>
+  <meta name="description" content="Edit PDF online: reorder pages, add watermark, delete pages, and export — all in your browser." />
+  <meta name="keywords" content="PDF editor, edit PDF online, reorder pages, watermark PDF, delete PDF pages" />
+  <meta name="robots" content="index, follow">
+  <!-- Google Search Console (replace with your code if needed) -->
+  <meta name="google-site-verification" content="YOUR_GSC_CODE_HERE">
+
+  <!-- Base styles (site-wide) -->
+  <link rel="stylesheet" href="../assets/styles.css">
+  <!-- Editor-specific styles -->
+  <link rel="stylesheet" href="../assets/edit.css">
+
+  <!-- Libraries (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body>
-<header class="navbar">
-  <div class="logo">HappyEdit</div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="#pdf-editor">Editor</a>
-  </nav>
-</header>
-
-<main class="container">
-  <section id="pdf-editor">
-    <h1>Edit PDF</h1>
-    <p>Drag to reorder pages, add watermark, or delete pages easily.</p>
-
-    <div class="pdf-container">
-      <div class="pdf-page" id="page-1">
-        <span class="page-number">1</span>
-        <canvas></canvas>
-      </div>
-      <div class="pdf-page" id="page-2">
-        <span class="page-number">2</span>
-        <canvas></canvas>
-      </div>
-      <!-- 动态生成 PDF 页面 -->
+  <header class="navbar">
+    <div class="container nav-content">
+      <div class="logo"><a href="../index.html" style="text-decoration:none;color:inherit">HappyEdit</a></div>
+      <nav>
+        <a href="../index.html">Home</a>
+        <a href="../index.html#tools">Tools</a>
+      </nav>
     </div>
+  </header>
 
-    <div class="action-buttons">
-      <button id="add-watermark">Add Watermark</button>
-      <button id="save-pdf">Save PDF</button>
-    </div>
-  </section>
-</main>
+  <main class="container">
+    <section class="card editor-card" id="editor">
+      <h1>Edit PDF</h1>
+      <p class="lead">Upload a PDF, reorder pages by drag-and-drop, remove pages, add a watermark, then export. Everything runs locally in your browser.</p>
 
-<footer class="footer">
-  © 2025 HappyEdit · All operations are local in your browser
-</footer>
+      <div class="uploader">
+        <label class="file-btn">
+          <input id="fileInput" type="file" accept="application/pdf" />
+          Upload PDF
+        </label>
+        <span id="fileName" class="muted">No file selected</span>
+        <label class="file-btn small" id="btnLoadExample" title="Load example PDF">Load example</label>
+      </div>
 
-<script src="assets/pdf-lib.min.js"></script>
-<script src="assets/edit.js"></script>
+      <div class="editor-controls">
+        <div class="left-controls">
+          <input id="watermarkText" placeholder="Watermark text (e.g. CONFIDENTIAL)" />
+          <select id="watermarkPosition">
+            <option value="center">Center</option>
+            <option value="top-left">Top-left</option>
+            <option value="top-right">Top-right</option>
+            <option value="bottom-left">Bottom-left</option>
+            <option value="bottom-right">Bottom-right</option>
+          </select>
+          <button id="applyWatermark" class="btn-primary" disabled>Add Watermark</button>
+        </div>
+
+        <div class="right-controls">
+          <button id="exportBtn" class="btn-secondary" disabled>Export (reorder/delete)</button>
+          <button id="downloadBtn" class="btn-primary" disabled>Export & Download</button>
+        </div>
+      </div>
+
+      <div id="pagesContainer" class="pages-container" aria-live="polite">
+        <!-- Page cards are injected here -->
+        <div class="empty-state" id="emptyState">Upload a PDF to view and edit pages.</div>
+      </div>
+
+      <p class="notes">Notes: Large PDFs may take time to render. Decryption-protected PDFs must be unlocked first on the decrypt page.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">© 2025 HappyEdit · All processing occurs in your browser.</div>
+  </footer>
+
+<script>
+/* ========== Initialization ========== */
+const fileInput = document.getElementById('fileInput');
+const fileNameEl = document.getElementById('fileName');
+const pagesContainer = document.getElementById('pagesContainer');
+const emptyState = document.getElementById('emptyState');
+const applyWatermarkBtn = document.getElementById('applyWatermark');
+const watermarkTextInput = document.getElementById('watermarkText');
+const watermarkPosSelect = document.getElementById('watermarkPosition');
+const exportBtn = document.getElementById('exportBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+const btnLoadExample = document.getElementById('btnLoadExample');
+
+let origArrayBuffer = null;    // original PDF bytes
+let pdfNumPages = 0;
+let sortable = null;
+
+/* Set pdf.js worker */
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+/* Helper: create a page card DOM */
+function createPageCard(pageIndex, canvas) {
+  const wrap = document.createElement('div');
+  wrap.className = 'page-card';
+  wrap.dataset.pageIndex = pageIndex; // 0-based index in source PDF
+  wrap.dataset.removed = 'false';
+
+  const num = document.createElement('div');
+  num.className = 'page-number';
+  num.textContent = `Page ${pageIndex + 1}`;
+  wrap.appendChild(num);
+
+  const canvasWrap = document.createElement('div');
+  canvasWrap.className = 'thumb-wrap';
+  canvasWrap.appendChild(canvas);
+  wrap.appendChild(canvasWrap);
+
+  const controls = document.createElement('div');
+  controls.className = 'page-controls';
+  // delete button
+  const delBtn = document.createElement('button');
+  delBtn.className = 'btn-small';
+  delBtn.textContent = 'Delete';
+  delBtn.title = 'Remove this page';
+  delBtn.addEventListener('click', () => {
+    wrap.remove();
+    refreshButtons();
+  });
+  controls.appendChild(delBtn);
+
+  // move hint
+  const hint = document.createElement('div');
+  hint.className = 'drag-hint';
+  hint.textContent = 'Drag to reorder';
+  controls.appendChild(hint);
+
+  wrap.appendChild(controls);
+  return wrap;
+}
+
+/* Render PDF thumbnails using pdf.js */
+async function renderPdfThumbnails(arrayBuffer) {
+  pagesContainer.innerHTML = '';
+  emptyState.style.display = 'none';
+
+  const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
+  const pdf = await loadingTask.promise;
+  pdfNumPages = pdf.numPages;
+
+  for (let i = 1; i <= pdfNumPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: 0.9 });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    canvas.className = 'thumb-canvas';
+    const ctx = canvas.getContext('2d');
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const card = createPageCard(i - 1, canvas);
+    pagesContainer.appendChild(card);
+  }
+
+  // enable sorting
+  if (sortable) sortable.destroy();
+  sortable = Sortable.create(pagesContainer, {
+    animation: 150,
+    handle: '.thumb-wrap',
+    ghostClass: 'drag-ghost',
+    onEnd: () => refreshButtons()
+  });
+
+  refreshButtons();
+}
+
+/* File input handler */
+fileInput.addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  fileNameEl.textContent = f.name;
+  origArrayBuffer = await f.arrayBuffer();
+  try {
+    await renderPdfThumbnails(origArrayBuffer);
+  } catch (err) {
+    alert('Failed to render PDF. The file may be encrypted or corrupted. Use the decrypt tool if it is password protected.');
+    console.error(err);
+  }
+});
+
+/* Optional: load a small example PDF (for testing) */
+btnLoadExample.addEventListener('click', async () => {
+  // Example: fetch a small sample PDF from a reliable static URL.
+  // If you prefer not to include example, you can remove this handler.
+  try {
+    const resp = await fetch('https://cors-anywhere.herokuapp.com/https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
+    const buf = await resp.arrayBuffer();
+    origArrayBuffer = buf;
+    fileNameEl.textContent = 'example.pdf';
+    await renderPdfThumbnails(origArrayBuffer);
+  } catch (err) {
+    console.error(err);
+    alert('Failed to load example PDF (CORS may block). You can test by uploading your PDF.');
+  }
+});
+
+/* Refresh state of action buttons */
+function refreshButtons() {
+  const cards = pagesContainer.querySelectorAll('.page-card');
+  const hasPages = cards.length > 0;
+  applyWatermarkBtn.disabled = !hasPages;
+  exportBtn.disabled = !hasPages;
+  downloadBtn.disabled = !hasPages;
+}
+
+/* Export: assemble pages (in current order) into new PDF (no watermark) */
+exportBtn.addEventListener('click', async () => {
+  if (!origArrayBuffer) return alert('Upload a PDF first.');
+  try {
+    exportBtn.disabled = true;
+    const bytes = await assemblePdf({ watermark: null });
+    triggerDownload(bytes, 'happyedit-export.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('Export failed: ' + (err.message || err));
+  } finally {
+    exportBtn.disabled = false;
+  }
+});
+
+/* Apply watermark and export */
+applyWatermarkBtn.addEventListener('click', async () => {
+  const text = watermarkTextInput.value.trim();
+  if (!text) return alert('Enter watermark text first.');
+  if (!origArrayBuffer) return alert('Upload a PDF first.');
+  applyWatermarkBtn.disabled = true;
+  try {
+    const bytes = await assemblePdf({ watermark: { text, position: watermarkPosSelect.value }});
+    triggerDownload(bytes, 'happyedit-watermarked.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('Failed to apply watermark: ' + (err.message || err));
+  } finally {
+    applyWatermarkBtn.disabled = false;
+  }
+});
+
+/* Download button: alias to export (for clarity) */
+downloadBtn.addEventListener('click', async () => {
+  if (!origArrayBuffer) return alert('Upload a PDF first.');
+  downloadBtn.disabled = true;
+  try {
+    const bytes = await assemblePdf({ watermark: null });
+    triggerDownload(bytes, 'happyedit-export.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('Download failed: ' + (err.message || err));
+  } finally {
+    downloadBtn.disabled = false;
+  }
+});
+
+/* Assemble PDF using pdf-lib: copy pages in current order, optionally draw watermark */
+async function assemblePdf({ watermark = null }) {
+  const srcDoc = await PDFLib.PDFDocument.load(origArrayBuffer);
+  const outDoc = await PDFLib.PDFDocument.create();
+  // embed a font for watermark
+  const helvetica = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+
+  // gather page indices from current DOM order
+  const cards = Array.from(pagesContainer.querySelectorAll('.page-card'));
+  if (cards.length === 0) throw new Error('No pages to export.');
+
+  // copy pages in order
+  for (let i = 0; i < cards.length; i++) {
+    const idx = Number(cards[i].dataset.pageIndex); // 0-based index into source PDF
+    const [copiedPage] = await outDoc.copyPages(srcDoc, [idx]);
+    outDoc.addPage(copiedPage);
+
+    // apply watermark if requested
+    if (watermark) {
+      const page = outDoc.getPages()[outDoc.getPageCount() - 1];
+      const { width, height } = page.getSize();
+      const fontSize = Math.max(24, Math.floor(Math.min(width, height) / 12));
+      const text = watermark.text;
+      // compute position
+      let x = width / 2;
+      let y = height / 2;
+      const pos = watermark.position || 'center';
+      if (pos === 'top-left') { x = 40; y = height - 40; }
+      if (pos === 'top-right') { x = width - 40 - helvetica.widthOfTextAtSize(text, fontSize); y = height - 40; }
+      if (pos === 'bottom-left') { x = 40; y = 40; }
+      if (pos === 'bottom-right') { x = width - 40 - helvetica.widthOfTextAtSize(text, fontSize); y = 40; }
+
+      page.drawText(text, {
+        x: x,
+        y: y,
+        size: fontSize,
+        font: helvetica,
+        color: PDFLib.rgb(0.2, 0.2, 0.2),
+        opacity: 0.15,
+        rotate: PDFLib.degrees(-30)
+      });
+    }
+  }
+
+  const outBytes = await outDoc.save();
+  return outBytes;
+}
+
+/* Utility: create download link for bytes */
+function triggerDownload(bytes, filename) {
+  const blob = new Blob([bytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* initial state */
+refreshButtons();
+</script>
 </body>
 </html>
