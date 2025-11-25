@@ -1,0 +1,123 @@
+/* Editor-specific styles (edit.css) - complements assets/styles.css */
+
+/* Make editor card larger and comfortable */
+.editor-card {
+    padding: 24px;
+  }
+  
+  /* Uploader */
+  .uploader {
+    display:flex;
+    gap:12px;
+    align-items:center;
+    margin:12px 0 18px;
+  }
+  .file-btn {
+    display:inline-block;
+    background:#e95420;
+    color:#fff;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .file-btn.small {
+    background:#f0f0f0;
+    color:#2e2e2e;
+    padding:6px 10px;
+    font-weight:500;
+    border:1px solid #ddd;
+  }
+  .file-btn input { display:none; }
+  
+  /* Controls layout */
+  .editor-controls {
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .left-controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .right-controls { display:flex; gap:8px; align-items:center; }
+  
+  /* small inputs */
+  #watermarkText {
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+    min-width:220px;
+  }
+  #watermarkPosition {
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid #ddd;
+  }
+  
+  /* pages container */
+  .pages-container {
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:16px;
+    align-items:start;
+    margin-top:12px;
+  }
+  
+  /* page card */
+  .page-card {
+    background:#fff;
+    border:1px solid #e6e6e6;
+    border-radius:10px;
+    padding:10px;
+    position:relative;
+    box-shadow:0 6px 18px rgba(15,23,42,0.04);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .thumb-wrap { cursor:grab; display:flex; justify-content:center; align-items:center; }
+  .thumb-canvas { width:100%; height:auto; border-radius:6px; max-height:260px; object-fit:cover; }
+  
+  /* page-number */
+  .page-number {
+    position:absolute;
+    top:8px;
+    right:10px;
+    font-size:12px;
+    color:#666;
+  }
+  
+  /* controls inside card */
+  .page-controls { display:flex; justify-content:space-between; align-items:center; gap:6px; margin-top:6px; }
+  .btn-small {
+    padding:6px 10px;
+    border-radius:8px;
+    background:#f3f4f6;
+    border:1px solid #e6e6e6;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn-small:hover { background:#eee; }
+  
+  /* drag ghost */
+  .drag-ghost { opacity:0.6; transform:scale(0.98); }
+  
+  /* empty state */
+  .empty-state {
+    padding:26px;
+    border-radius:10px;
+    background:#fff;
+    border:1px dashed #ddd;
+    color:#666;
+    text-align:center;
+  }
+  
+  /* notes */
+  .notes { margin-top:10px; color:#666; font-size:0.9rem; }
+  
+  /* responsive */
+  @media (max-width:720px) {
+    .editor-controls { flex-direction:column; align-items:flex-start; gap:8px; }
+    .pages-container { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+  }
+  
