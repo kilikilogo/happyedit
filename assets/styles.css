@@ -1,81 +1,89 @@
-:root{
-    --bg:#f6f8fa;
-    --card:#ffffff;
-    --muted:#6b7280;
-    --accent:#2563eb;
-    --accent-2:#7c3aed;
-    --radius:12px;
-    --shadow: 0 6px 20px rgba(16,24,40,0.08);
-    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    background:linear-gradient(180deg,#f8fafc, #f3f6fb);
-    color:#0f172a;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    line-height:1.45;
-  }
-  .site-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:18px 24px;
-    background:transparent;
-    max-width:1100px;
-    margin:0 auto;
-  }
-  .logo{font-weight:700;color:var(--accent);text-decoration:none;font-size:18px}
-  .site-header nav a{color:var(--muted);text-decoration:none;margin-left:12px}
-  
-  .container{
-    max-width:1100px;
-    margin:22px auto;
-    padding:0 20px 60px;
-  }
-  h1{margin:8px 0 6px;font-size:28px}
-  .lead{color:var(--muted);margin:0 0 16px}
-  
-  .card{
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:20px;
-    box-shadow:var(--shadow);
-    margin-bottom:18px;
-  }
-  
-  /* file label */
-  .file-label{
-    display:inline-block;
-    border:1px dashed #e6eef9;
-    padding:12px 16px;
-    border-radius:10px;
-    cursor:pointer;
-    color:var(--muted);
-    margin-bottom:12px;
-  }
-  .file-label input{display:none}
-  .controls-row{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}
-  .controls-row input[type="text"], .controls-row input[type="number"], input[type="password"], select{
-    padding:8px 10px;border-radius:8px;border:1px solid #e6eef9;min-width:160px;
-  }
-  .btn{
-    padding:8px 12px;border-radius:10px;border:none;background:#eef2ff;color:var(--accent);cursor:pointer;
-    box-shadow:none;font-weight:600;
-  }
-  .btn-primary{background:var(--accent);color:#fff}
-  .actions{margin-top:14px}
-  .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}
-  .thumb{width:100%;height:auto;border-radius:8px;box-shadow:0 6px 18px rgba(15,23,42,0.06)}
-  .thumb-caption{text-align:center;margin-top:6px;color:var(--muted);font-size:13px}
-  
-  .page-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-  .page-row{background:linear-gradient(90deg,#ffffff,#fbfdff);padding:8px;border-radius:8px;border:1px solid #f1f5f9}
-  
-  .site-footer{text-align:center;color:var(--muted);padding:22px 8px 60px}
-  @media (max-width:720px){
-    .controls-row{flex-direction:column}
-  }
-  
+/* ========== Global Reset ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", Arial, sans-serif;
+  background: #f5f5f5;
+  color: #2e2e2e;
+  line-height: 1.6;
+}
+
+/* ========== Header ========== */
+.header {
+  background: linear-gradient(135deg, #2e2e2e 0%, #1d1d1d 100%);
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+}
+
+.header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 1.3rem;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+
+.subtag {
+  font-size: 1rem;
+  opacity: 0.7;
+  margin-top: 5px;
+}
+
+/* ========== Main Container ========== */
+.container {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ========== Tools Grid ========== */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
+
+.tool-card {
+  background: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 12px;
+  padding: 25px;
+  text-decoration: none;
+  color: #2e2e2e;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-color: #e95420;
+}
+
+.tool-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #e95420;
+}
+
+.tool-card p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* ========== Footer ========== */
+.footer {
+  text-align: center;
+  padding: 25px 10px;
+  margin-top: 40px;
+  color: #555;
+  font-size: 0.9rem;
+  border-top: 1px solid #d9d9d9;
+}
