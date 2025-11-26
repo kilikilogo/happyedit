@@ -11,7 +11,7 @@
     <!-- PDF.js library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <style>
-        /* PDF Editor Specific Styles */
+        /* 现有的编辑器特定样式保持不变，但添加横向布局调整 */
         .editor-container {
             display: flex;
             flex-direction: column;
@@ -24,12 +24,15 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .editor-actions {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
         }
         
         .action-button {
@@ -71,7 +74,7 @@
             background: white;
             padding: 3rem;
             text-align: center;
-            margin: 2rem auto;
+            margin: 1.5rem auto;
             transition: all 0.3s ease;
             cursor: pointer;
         }
@@ -118,8 +121,8 @@
         .pdf-viewer-container {
             display: none;
             flex-direction: column;
-            gap: 1.5rem;
-            margin: 2rem auto;
+            gap: 1rem;
+            margin: 1.5rem auto;
         }
         
         .pdf-toolbar {
@@ -130,16 +133,26 @@
             background: white;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        /* 水平排列PDF页面 */
+        .pdf-pages-container {
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 1200px;
         }
         
         .pdf-pages {
             display: flex;
-            flex-wrap: wrap;
             gap: 1.5rem;
-            justify-content: center;
-            overflow: auto;
-            max-height: calc(100vh - 300px);
             padding: 1rem;
+            min-height: calc(100vh - 350px);
+            align-items: flex-start;
+            width: fit-content;
         }
         
         .pdf-page {
@@ -151,6 +164,12 @@
             overflow: hidden;
             background: white;
             border: 1px solid var(--border);
+            flex: 0 0 auto;
+            width: 210mm; /* A4宽度 */
+            height: 297mm; /* A4高度 */
+            max-width: 300px;
+            max-height: 424px;
+            transform-origin: center;
         }
         
         .pdf-page:hover {
@@ -162,10 +181,23 @@
             box-shadow: 0 0 0 3px var(--primary);
         }
         
+        .pdf-page.dragging {
+            opacity: 0.8;
+            transform: scale(1.05);
+            z-index: 10;
+        }
+        
+        .pdf-page.placeholder {
+            border: 2px dashed var(--primary);
+            background: rgba(59, 130, 246, 0.1);
+            z-index: 5;
+        }
+        
         .pdf-page img {
             display: block;
-            max-width: 100%;
-            height: auto;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .page-number {
@@ -178,6 +210,7 @@
             border-radius: 4px;
             font-size: 14px;
             font-weight: 600;
+            z-index: 2;
         }
         
         .zoom-indicator {
@@ -190,6 +223,7 @@
             border-radius: 4px;
             font-size: 12px;
             display: none;
+            z-index: 2;
         }
         
         .page-controls {
@@ -211,16 +245,36 @@
             padding: 2rem;
             color: var(--medium);
             font-size: 1.1rem;
+            width: 100%;
         }
         
+        .drag-handle {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: move;
+            z-index: 3;
+        }
+        
+        /* 适应移动设备 */
         @media (max-width: 768px) {
             .pdf-toolbar {
                 flex-direction: column;
+                align-items: stretch;
                 gap: 1rem;
             }
             
-            .pdf-pages {
-                max-height: calc(100vh - 350px);
+            .pdf-page {
+                max-width: calc(100vw - 40px);
+                width: auto;
             }
         }
     </style>
@@ -247,7 +301,7 @@
     <section class="hero">
         <div class="container">
             <h1>PDF Editor</h1>
-            <p>Edit, view, and download specific pages from your PDF documents</p>
+            <p>Edit, view, and download your PDF documents. Drag to reorder pages.</p>
         </div>
     </section>
 
@@ -261,6 +315,14 @@
                         <line x1="12" y1="3" x2="12" y2="15"></line>
                     </svg>
                     Download Selected
+                </button>
+                <button class="action-button secondary" id="download-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Download All
                 </button>
             </div>
         </div>
@@ -304,9 +366,11 @@
                     </button>
                 </div>
             </div>
-            <div class="pdf-pages" id="pdf-pages">
-                <div class="viewer-message">
-                    <p>Your PDF will appear here after upload</p>
+            <div class="pdf-pages-container">
+                <div class="pdf-pages" id="pdf-pages">
+                    <div class="viewer-message">
+                        <p>Your PDF will appear here after upload</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -366,6 +430,7 @@
         const currentPageInput = document.getElementById('current-page');
         const pageCountSpan = document.getElementById('page-count');
         const downloadSelectedBtn = document.getElementById('download-selected');
+        const downloadAllBtn = document.getElementById('download-all');
         const resetViewBtn = document.getElementById('reset-view');
         const homeButton = document.getElementById('home-button');
 
@@ -373,10 +438,13 @@
         let pdfDoc = null;
         let pdfScale = 1.0;
         let currentPage = 1;
+        let pageOrder = [];
         let selectedPages = new Set();
         let isDragging = false;
         let dragStartX = 0;
         let dragStartY = 0;
+        let activeDragElement = null;
+        let dragOverElement = null;
         let pageElements = [];
 
         // Event Listeners
@@ -390,8 +458,9 @@
         dropZone.addEventListener('dragleave', handleDragLeave);
         dropZone.addEventListener('drop', handleDrop);
 
-        // Download button
+        // Download buttons
         downloadSelectedBtn.addEventListener('click', downloadSelectedPages);
+        downloadAllBtn.addEventListener('click', downloadAllPages);
 
         // Reset view button
         resetViewBtn.addEventListener('click', resetAllPages);
@@ -443,10 +512,12 @@
             // Load PDF document
             pdfjsLib.getDocument(data).promise.then(pdf => {
                 pdfDoc = pdf;
+                pageOrder = Array.from({length: pdf.numPages}, (_, i) => i + 1);
                 pageCountSpan.textContent = `of ${pdf.numPages}`;
                 currentPageInput.max = pdf.numPages;
+                currentPageInput.value = 1;
                 
-                // Render all pages
+                // Render all pages in order
                 renderAllPages();
             }).catch(error => {
                 console.error('Error loading PDF:', error);
@@ -458,16 +529,19 @@
             pdfPages.innerHTML = '';
             pageElements = [];
             
-            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+            // Render pages according to current order
+            pageOrder.forEach(pageNum => {
                 renderPage(pageNum);
-            }
+            });
         }
 
         function renderPage(pageNum) {
             pdfDoc.getPage(pageNum).then(page => {
-                // Set scale for viewer
-                const scale = 1.0;
-                const viewport = page.getViewport({ scale });
+                // Calculate optimal scale for horizontal view
+                const containerWidth = Math.min(300, window.innerWidth * 0.8);
+                const scale = containerWidth / page.getViewport({scale: 1}).width;
+                
+                const viewport = page.getViewport({scale});
                 
                 // Create canvas element for the page
                 const canvas = document.createElement('canvas');
@@ -479,7 +553,15 @@
                 const pageContainer = document.createElement('div');
                 pageContainer.className = 'pdf-page';
                 pageContainer.dataset.pageNumber = pageNum;
+                pageContainer.draggable = true;
                 pageContainer.innerHTML = `
+                    <div class="drag-handle">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="19" cy="12" r="1"></circle>
+                            <circle cx="5" cy="12" r="1"></circle>
+                        </svg>
+                    </div>
                     <div class="page-number">${pageNum}</div>
                     <div class="zoom-indicator">100%</div>
                 `;
@@ -488,6 +570,9 @@
                 pageContainer.insertBefore(canvas, pageContainer.firstChild);
                 pdfPages.appendChild(pageContainer);
                 pageElements.push(pageContainer);
+                
+                // Setup drag events for reordering
+                setupDragEvents(pageContainer);
                 
                 // Render the page
                 const renderContext = {
@@ -502,43 +587,126 @@
             });
         }
 
+        function setupDragEvents(pageElement) {
+            // Drag start - reorder pages
+            pageElement.addEventListener('dragstart', (e) => {
+                e.dataTransfer.effectAllowed = 'move';
+                activeDragElement = pageElement;
+                pageElement.classList.add('dragging');
+                setTimeout(() => {
+                    pageElement.style.opacity = '0.5';
+                }, 0);
+            });
+            
+            pageElement.addEventListener('dragend', () => {
+                pageElement.classList.remove('dragging');
+                pageElement.style.opacity = '1';
+                
+                // Update page order based on DOM order
+                if (dragOverElement && activeDragElement) {
+                    const dragIndex = Array.from(pdfPages.children).indexOf(activeDragElement);
+                    const overIndex = Array.from(pdfPages.children).indexOf(dragOverElement);
+                    
+                    if (dragIndex !== overIndex) {
+                        // Swap elements in DOM
+                        if (dragIndex < overIndex) {
+                            pdfPages.insertBefore(activeDragElement, dragOverElement.nextSibling);
+                        } else {
+                            pdfPages.insertBefore(activeDragElement, dragOverElement);
+                        }
+                        
+                        // Update page order array
+                        const fromIndex = pageOrder.indexOf(parseInt(activeDragElement.dataset.pageNumber));
+                        const toIndex = pageOrder.indexOf(parseInt(dragOverElement.dataset.pageNumber));
+                        
+                        const temp = pageOrder[fromIndex];
+                        pageOrder[fromIndex] = pageOrder[toIndex];
+                        pageOrder[toIndex] = temp;
+                        
+                        // Update page numbers display
+                        updatePageNumbers();
+                    }
+                }
+                
+                activeDragElement = null;
+                dragOverElement = null;
+                
+                // Remove all placeholders
+                document.querySelectorAll('.placeholder').forEach(el => el.classList.remove('placeholder'));
+            });
+            
+            // Drag over - show placeholder
+            pageElement.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                
+                if (activeDragElement !== pageElement && !pageElement.classList.contains('placeholder')) {
+                    // Remove existing placeholders
+                    document.querySelectorAll('.placeholder').forEach(el => el.classList.remove('placeholder'));
+                    
+                    // Add placeholder class
+                    pageElement.classList.add('placeholder');
+                    dragOverElement = pageElement;
+                }
+            });
+            
+            pageElement.addEventListener('dragleave', () => {
+                pageElement.classList.remove('placeholder');
+            });
+        }
+
+        function updatePageNumbers() {
+            pageElements.forEach((el, index) => {
+                const pageNumElement = el.querySelector('.page-number');
+                if (pageNumElement) {
+                    pageNumElement.textContent = index + 1;
+                    el.dataset.displayNumber = index + 1;
+                }
+            });
+        }
+
         function setupPageInteractions(pageElement) {
             const canvas = pageElement.querySelector('canvas');
             const zoomIndicator = pageElement.querySelector('.zoom-indicator');
             
-            // Drag to move
-            pageElement.addEventListener('mousedown', (e) => {
-                if (e.target === canvas || e.target === pageElement) {
-                    isDragging = true;
-                    dragStartX = e.clientX;
-                    dragStartY = e.clientY;
-                    pageElement.style.cursor = 'grabbing';
-                }
+            // Mouse down for canvas dragging
+            let isCanvasDragging = false;
+            let canvasDragStartX = 0;
+            let canvasDragStartY = 0;
+            
+            canvas.addEventListener('mousedown', (e) => {
+                isCanvasDragging = true;
+                canvasDragStartX = e.clientX;
+                canvasDragStartY = e.clientY;
+                canvas.style.cursor = 'grabbing';
+                e.stopPropagation();
             });
             
             // Double click to zoom
-            pageElement.addEventListener('dblclick', () => {
+            canvas.addEventListener('dblclick', () => {
                 togglePageZoom(pageElement);
             });
             
             // Select page on click (not drag)
             pageElement.addEventListener('click', (e) => {
-                if (!isDragging && e.target !== zoomIndicator) {
+                if (!isCanvasDragging && e.target !== zoomIndicator && e.target !== pageElement.querySelector('.drag-handle')) {
                     togglePageSelection(pageElement);
                 }
             });
             
             // Reset drag state on mouse up
             document.addEventListener('mouseup', () => {
-                isDragging = false;
-                pageElement.style.cursor = 'grab';
+                isCanvasDragging = false;
+                if (canvas) {
+                    canvas.style.cursor = 'grab';
+                }
             });
             
-            // Handle mouse move for dragging
+            // Handle mouse move for canvas dragging
             document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    const deltaX = e.clientX - dragStartX;
-                    const deltaY = e.clientY - dragStartY;
+                if (isCanvasDragging) {
+                    const deltaX = e.clientX - canvasDragStartX;
+                    const deltaY = e.clientY - canvasDragStartY;
                     
                     // Apply translation to the canvas
                     const transform = canvas.style.transform || '';
@@ -555,8 +723,8 @@
                     canvas.style.transform = `translate(${currentX + deltaX}px, ${currentY + deltaY}px)`;
                     
                     // Update drag start position
-                    dragStartX = e.clientX;
-                    dragStartY = e.clientY;
+                    canvasDragStartX = e.clientX;
+                    canvasDragStartY = e.clientY;
                 }
             });
         }
@@ -590,10 +758,11 @@
                 pageElement.classList.add('selected');
             }
             
-            updateDownloadButton();
+            updateDownloadButtons();
         }
 
-        function updateDownloadButton() {
+        function updateDownloadButtons() {
+            // Update selected pages button
             if (selectedPages.size > 0) {
                 downloadSelectedBtn.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -603,6 +772,7 @@
                     </svg>
                     Download ${selectedPages.size} Page${selectedPages.size > 1 ? 's' : ''}
                 `;
+                downloadSelectedBtn.disabled = false;
             } else {
                 downloadSelectedBtn.innerHTML = `
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -615,7 +785,15 @@
                 downloadSelectedBtn.disabled = true;
             }
             
-            downloadSelectedBtn.disabled = selectedPages.size === 0;
+            // Update all pages button
+            downloadAllBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Download All (${pageOrder.length})
+            `;
         }
 
         function resetAllPages() {
@@ -631,12 +809,11 @@
         function downloadSelectedPages() {
             if (selectedPages.size === 0) return;
             
-            alert('Downloading selected pages. In a real implementation, this would create a new PDF with the selected pages.');
-            
-            // In a real app, you would:
-            // 1. Create a new PDF document
-            // 2. Add the selected pages to it
-            // 3. Generate a Blob and trigger download
+            alert(`Downloading ${selectedPages.size} selected page(s).\n\nIn a real implementation, this would create a new PDF with the selected pages.`);
+        }
+
+        function downloadAllPages() {
+            alert(`Downloading PDF with all ${pageOrder.length} pages in current order.\n\nIn a real implementation, this would create a new PDF with pages in the current order.`);
         }
 
         // Initialize Lucide icons
