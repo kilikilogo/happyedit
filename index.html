@@ -1,80 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="HappyEdit — Simple, secure and fast online PDF tools" />
-    <meta name="google-site-verification" content="PASTE_YOUR_GSC_CODE_HERE" />
-    <title>HappyEdit — Simple & Secure PDF Tools</title>
-    <link rel="icon" href="../assets/favicon.png" type="image/png">
-    <!-- 引入优化后的字体系统 -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HappyEdit — Free Online PDF Tools</title>
+    <link rel="icon" href="/assets/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
     <header class="navbar">
-        <div class="logo">HappyEdit</div>
-        <nav>
-            <a href="#features">Features</a>
-            <a href="#tools">Tools</a>
-            <a href="#about">About</a>
-        </nav>
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <img src="/assets/favicon.png" alt="HappyEdit Logo" style="width: 24px; height: 24px; border-radius: 4px;">
+                </div>
+                <div class="logo-text">HappyEdit</div>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#about">About</a>
+            </div>
+            <button class="cta-button">
+                Start Editing
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+        </div>
     </header>
 
     <section class="hero">
-        <h1>Modern, Clean & Fast PDF Tools</h1>
-        <p>Process documents securely in your browser — no installations needed</p>
-        <a class="cta-main" href="#tools">Try Tools Free →</a>
-    </section>
-
-    <section id="features" class="features">
-        <div class="feature-card">
-            <div class="feature-icon">⚡</div>
-            <h3>Lightning Fast</h3>
-            <p>Optimized for instant processing even with large documents</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🛡️</div>
-            <h3>Military-grade Security</h3>
-            <p>Files are encrypted and auto-deleted after 1 hour</p>
+        <div class="container">
+            <h1>Free Online PDF Tools</h1>
+            <p>Edit, delete pages, convert and merge PDFs instantly. No signups, no payments, no watermarks.</p>
+            
+            <div class="hero-buttons">
+                <button class="primary-button">
+                    Try All Tools Free
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </div>
+            
+            <div class="feature-badge">
+                <div class="badge-dot"></div>
+                <span>100% Free · No Registration · Browser-based Processing</span>
+            </div>
         </div>
     </section>
 
     <section id="tools" class="tools">
-        <h2>Essential PDF Tools</h2>
-        <p class="tools-description">All tools work directly in your browser with no file size limits</p>
-        <div class="tool-grid">
-            <a class="tool-card" href="edit/index.html">
-                <div class="tool-icon">✏️</div>
-                <h3>Edit PDF</h3>
-                <p>Modify text, images and pages online</p>
-            </a>
-            <a class="tool-card" href="delete-pages/index.html">
-                <div class="tool-icon">✂️</div>
-                <h3>Delete Pages</h3>
-                <p>Remove unwanted pages from PDFs</p>
-            </a>
-            <a class="tool-card" href="convert.html">
-                <div class="tool-icon">🔄</div>
-                <h3>PDF Converter</h3>
-                <p>Convert to/from Word, Excel & Images</p>
-            </a>
-            <a class="tool-card" href="merge.html">
-                <div class="tool-icon">📎</div>
-                <h3>Merge PDFs</h3>
-                <p>Combine multiple PDFs into one file</p>
-            </a>
+        <div class="container">
+            <div class="section-header">
+                <h2>Essential PDF Tools</h2>
+                <p>All tools work directly in your browser with no file size limits</p>
+            </div>
+            
+            <div class="tools-grid">
+                <a href="#edit" class="tool-card">
+                    <div class="tool-header" style="background: linear-gradient(to bottom right, #3B82F6, #2563EB);">
+                        <div class="tool-icon-container">
+                            <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                        </div>
+                        <h3 class="tool-title">Edit PDF</h3>
+                        <p class="tool-description">Modify text, images, and pages online</p>
+                    </div>
+                    <div class="tool-footer">
+                        <div class="tool-action">
+                            Start Editing
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <div class="tool-badge">
+                            <div class="tool-badge-dot"></div>
+                            <span>Free forever · No signup required</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="#delete" class="tool-card">
+                    <div class="tool-header" style="background: linear-gradient(to bottom right, #F59E0B, #D97706);">
+                        <div class="tool-icon-container">
+                            <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+                        </div>
+                        <h3 class="tool-title">Delete Pages</h3>
+                        <p class="tool-description">Remove unwanted pages from PDFs</p>
+                    </div>
+                    <div class="tool-footer">
+                        <div class="tool-action">
+                            Start Editing
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <div class="tool-badge">
+                            <div class="tool-badge-dot"></div>
+                            <span>Free forever · No signup required</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="#convert" class="tool-card">
+                    <div class="tool-header" style="background: linear-gradient(to bottom right, #10B981, #059669);">
+                        <div class="tool-icon-container">
+                            <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23h10a4 4 0 0 0 4-4v-2"/></svg>
+                        </div>
+                        <h3 class="tool-title">PDF Converter</h3>
+                        <p class="tool-description">Convert to/from Word, Excel, Images</p>
+                    </div>
+                    <div class="tool-footer">
+                        <div class="tool-action">
+                            Start Editing
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <div class="tool-badge">
+                            <div class="tool-badge-dot"></div>
+                            <span>Free forever · No signup required</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <a href="#merge" class="tool-card">
+                    <div class="tool-header" style="background: linear-gradient(to bottom right, #8B5CF6, #7C3AED);">
+                        <div class="tool-icon-container">
+                            <svg class="tool-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </div>
+                        <h3 class="tool-title">Merge PDFs</h3>
+                        <p class="tool-description">Combine multiple PDFs into one file</p>
+                    </div>
+                    <div class="tool-footer">
+                        <div class="tool-action">
+                            Start Editing
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <div class="tool-badge">
+                            <div class="tool-badge-dot"></div>
+                            <span>Free forever · No signup required</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="security-note">
+                <div class="security-badge">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    Your files are processed securely in your browser and never stored
+                </div>
+                <p>All processing happens directly in your browser. Files are never uploaded to our servers and are automatically deleted when you close the tab.</p>
+            </div>
         </div>
     </section>
 
     <footer class="footer">
-        <div class="footer-content">
-            <p>HappyEdit © 2025 — Built with ❤️ in San Francisco</p>
-            <div class="footer-links">
-                <a href="/privacy">Privacy Policy</a>
-                <a href="/terms">Terms of Service</a>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <img src="/assets/favicon.png" alt="HappyEdit Logo" style="width: 24px; height: 24px; border-radius: 4px;">
+                    </div>
+                </div>
+                <div class="footer-logo-text">HappyEdit</div>
+                <p class="footer-description">Free PDF tools for everyone. No hidden costs, no signups, no compromises.</p>
+                
+                <div class="footer-links">
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                    <a href="/contact">Contact</a>
+                </div>
+                
+                <p class="copyright">© <span id="year"></span> HappyEdit. All rights reserved.</p>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
+        
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
