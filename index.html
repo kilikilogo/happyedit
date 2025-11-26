@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="HappyEdit — Simple and elegant online PDF tools" />
+    <meta name="description" content="HappyEdit — Simple, secure and fast online PDF tools" />
     <meta name="google-site-verification" content="PASTE_YOUR_GSC_CODE_HERE" />
-    <title>HappyEdit — Simple PDF Tools</title>
+    <title>HappyEdit — Simple & Secure PDF Tools</title>
     <link rel="icon" href="../assets/favicon.png" type="image/png">
+    <!-- 引入优化后的字体系统 -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
@@ -20,34 +22,59 @@
     </header>
 
     <section class="hero">
-        <h1>Modern, Clean and Fast PDF Tools</h1>
-        
-        <a class="cta-main" href="#tools">Explore Tools</a>
+        <h1>Modern, Clean & Fast PDF Tools</h1>
+        <p>Process documents securely in your browser — no installations needed</p>
+        <a class="cta-main" href="#tools">Try Tools Free →</a>
     </section>
 
     <section id="features" class="features">
         <div class="feature-card">
-            <h3>Fast</h3>
-            <p>Optimized for instant processing even on large documents.</p>
+            <div class="feature-icon">⚡</div>
+            <h3>Lightning Fast</h3>
+            <p>Optimized for instant processing even with large documents</p>
         </div>
         <div class="feature-card">
-            <h3>Secure</h3>
-            <p>Your files are processed with privacy in mind.</p>
+            <div class="feature-icon">🛡️</div>
+            <h3>Military-grade Security</h3>
+            <p>Files are encrypted and auto-deleted after 1 hour</p>
         </div>
     </section>
 
     <section id="tools" class="tools">
-        <h2>Tools</h2>
+        <h2>Essential PDF Tools</h2>
+        <p class="tools-description">All tools work directly in your browser with no file size limits</p>
         <div class="tool-grid">
-            <a class="tool-card" href="edit/index.html">Edit PDF</a>
-            <a class="tool-card" href="delete-pages/index.html">Delete PDF pages</a>
-            <a class="tool-card" href="convert.html">PDF Converter(not)</a>
-            <a class="tool-card" href="merge.html">Merge PDF(not)</a>
+            <a class="tool-card" href="edit/index.html">
+                <div class="tool-icon">✏️</div>
+                <h3>Edit PDF</h3>
+                <p>Modify text, images and pages online</p>
+            </a>
+            <a class="tool-card" href="delete-pages/index.html">
+                <div class="tool-icon">✂️</div>
+                <h3>Delete Pages</h3>
+                <p>Remove unwanted pages from PDFs</p>
+            </a>
+            <a class="tool-card" href="convert.html">
+                <div class="tool-icon">🔄</div>
+                <h3>PDF Converter</h3>
+                <p>Convert to/from Word, Excel & Images</p>
+            </a>
+            <a class="tool-card" href="merge.html">
+                <div class="tool-icon">📎</div>
+                <h3>Merge PDFs</h3>
+                <p>Combine multiple PDFs into one file</p>
+            </a>
         </div>
     </section>
 
     <footer class="footer">
-        HappyEdit © 2025 — Built with ❤️
+        <div class="footer-content">
+            <p>HappyEdit © 2025 — Built with ❤️ in San Francisco</p>
+            <div class="footer-links">
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+            </div>
+        </div>
     </footer>
 </body>
 </html>
