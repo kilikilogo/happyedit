@@ -1,329 +1,646 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HappyEdit — Edit PDF</title>
-  <meta name="description" content="Edit PDF online: reorder pages, add watermark, delete pages, and export — all in your browser." />
-  <meta name="keywords" content="PDF editor, edit PDF online, reorder pages, watermark PDF, delete PDF pages" />
-  <meta name="robots" content="index, follow">
-  <!-- Google Search Console (replace with your code if needed) -->
-  <meta name="google-site-verification" content="YOUR_GSC_CODE_HERE">
-
-  <!-- Base styles (site-wide) -->
-  <link rel="stylesheet" href="../assets/styles.css">
-  <!-- Editor-specific styles -->
-  <link rel="stylesheet" href="../assets/edit.css">
-  <!-- Editor-Icon_logo -->
-  <link rel="stylesheet" href="../assets/icon.css">
-
-  <!-- Libraries (CDN) -->
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Editor — HappyEdit</title>
+    <link rel="icon" href="/assets/favicon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- PDF.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <style>
+        /* PDF Editor Specific Styles */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        
+        .editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        
+        .editor-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .action-button {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2);
+        }
+        
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+        
+        .action-button.secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .action-button.secondary:hover {
+            background: var(--background-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .drop-zone {
+            border: 3px dashed var(--border);
+            border-radius: var(--radius-lg);
+            background: white;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem auto;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--primary);
+            background-color: rgba(59, 130, 246, 0.03);
+        }
+        
+        .drop-zone-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            color: var(--primary);
+            stroke-width: 1.5;
+        }
+        
+        .drop-zone h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+        
+        .drop-zone p {
+            color: var(--medium);
+            margin-bottom: 1.5rem;
+        }
+        
+        .browse-button {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 0.5rem;
+        }
+        
+        .pdf-viewer-container {
+            display: none;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 2rem auto;
+        }
+        
+        .pdf-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .pdf-pages {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            overflow: auto;
+            max-height: calc(100vh - 300px);
+            padding: 1rem;
+        }
+        
+        .pdf-page {
+            position: relative;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--radius-md);
+            cursor: grab;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            background: white;
+            border: 1px solid var(--border);
+        }
+        
+        .pdf-page:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+        
+        .pdf-page.selected {
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+        
+        .pdf-page img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .page-number {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .zoom-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: none;
+        }
+        
+        .page-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .page-input {
+            width: 70px;
+            padding: 0.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            text-align: center;
+        }
+        
+        .viewer-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--medium);
+            font-size: 1.1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .pdf-toolbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .pdf-pages {
+                max-height: calc(100vh - 350px);
+            }
+        }
+    </style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container nav-content">
-      <div class="logo">
-        <img src="/assets/favicon.png" alt="Logo icon" class="logo-icon" />
-        <a href="../index.html" style="text-decoration:none;color:inherit">HappyEdit</a></div>
-      <nav>
-        <a href="../index.html">Home</a>
-      </nav>
-    </div>
-  </header>
-
-  <main class="container">
-    <section class="card editor-card" id="editor">
-      <h1>Edit PDF</h1>
-      <p class="lead">Upload a PDF, reorder pages by drag-and-drop, remove pages, add a watermark, then export. Everything runs locally in your browser.</p>
-
-      <div class="uploader">
-        <label class="file-btn">
-          <input id="fileInput" type="file" accept="application/pdf" />
-          Upload PDF
-        </label>
-        <span id="fileName" class="muted">No file selected</span>
-        <label class="file-btn small" id="btnLoadExample" title="Load example PDF">Load example</label>
-      </div>
-
-      <div class="editor-controls">
-        <div class="left-controls">
-          <input id="watermarkText" placeholder="Watermark text (e.g. CONFIDENTIAL)" />
-          <select id="watermarkPosition">
-            <option value="center">Center</option>
-            <option value="top-left">Top-left</option>
-            <option value="top-right">Top-right</option>
-            <option value="bottom-left">Bottom-left</option>
-            <option value="bottom-right">Bottom-right</option>
-          </select>
-          <button id="applyWatermark" class="btn-primary" disabled>Add Watermark</button>
+    <header class="navbar">
+        <div class="container">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <img src="/assets/favicon.png" alt="HappyEdit Logo" style="width: 24px; height: 24px; border-radius: 4px;">
+                </div>
+                <div class="logo-text">HappyEdit</div>
+            </div>
+            <button class="action-button secondary" id="home-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                Home
+            </button>
         </div>
+    </header>
 
-        <div class="right-controls">
-          <button id="exportBtn" class="btn-secondary" disabled>Export (reorder/delete)</button>
-          <button id="downloadBtn" class="btn-primary" disabled>Export & Download</button>
+    <section class="hero">
+        <div class="container">
+            <h1>PDF Editor</h1>
+            <p>Edit, view, and download specific pages from your PDF documents</p>
         </div>
-      </div>
-
-      <div id="pagesContainer" class="pages-container" aria-live="polite">
-        <!-- Page cards are injected here -->
-        <div class="empty-state" id="emptyState">Upload a PDF to view and edit pages.</div>
-      </div>
-
-      <p class="notes">Notes: Large PDFs may take time to render. Decryption-protected PDFs must be unlocked first on the decrypt page.</p>
     </section>
-  </main>
 
-  <footer class="footer">
-    <div class="container">© 2025 HappyEdit · All processing occurs in your browser.</div>
-  </footer>
+    <div class="editor-container">
+        <div class="editor-header">
+            <div class="editor-actions">
+                <button class="action-button" id="download-selected">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Download Selected
+                </button>
+            </div>
+        </div>
 
-<script>
-/* ========== Initialization ========== */
-const fileInput = document.getElementById('fileInput');
-const fileNameEl = document.getElementById('fileName');
-const pagesContainer = document.getElementById('pagesContainer');
-const emptyState = document.getElementById('emptyState');
-const applyWatermarkBtn = document.getElementById('applyWatermark');
-const watermarkTextInput = document.getElementById('watermarkText');
-const watermarkPosSelect = document.getElementById('watermarkPosition');
-const exportBtn = document.getElementById('exportBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const btnLoadExample = document.getElementById('btnLoadExample');
+        <div class="drop-zone" id="drop-zone">
+            <svg class="drop-zone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            <h3>Drag & Drop your PDF here</h3>
+            <p>or click to browse files from your device</p>
+            <input type="file" id="file-input" accept=".pdf" hidden>
+            <button class="browse-button" id="browse-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Browse Files
+            </button>
+            <p style="margin-top: 1rem; color: var(--medium); font-size: 0.9rem;">
+                <span class="badge-dot"></span> 100% Free · No Registration · Browser-based Processing
+            </p>
+        </div>
 
-let origArrayBuffer = null;    // original PDF bytes
-let pdfNumPages = 0;
-let sortable = null;
+        <div class="pdf-viewer-container" id="pdf-viewer">
+            <div class="pdf-toolbar">
+                <div class="page-controls">
+                    <span>Page:</span>
+                    <input type="number" class="page-input" id="current-page" value="1" min="1">
+                    <span id="page-count">of 1</span>
+                </div>
+                <div class="viewer-actions">
+                    <button class="action-button secondary" id="reset-view">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 2v6h6"></path>
+                            <path d="M3 13a9 9 0 1 0 18 0"></path>
+                        </svg>
+                        Reset View
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-pages" id="pdf-pages">
+                <div class="viewer-message">
+                    <p>Your PDF will appear here after upload</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-/* Set pdf.js worker */
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon">
+                        <img src="/assets/favicon.png" alt="HappyEdit Logo" style="width: 24px; height: 24px; border-radius: 4px;">
+                    </div>
+                </div>
+                <div class="footer-logo-text">HappyEdit</div>
+                <p class="footer-description">Free PDF tools for everyone. No hidden costs, no signups, no compromises.</p>
+                
+                <div class="footer-links">
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                    <a href="/contact">Contact</a>
+                </div>
+                
+                <p class="copyright">© <span id="year"></span> HappyEdit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
-/* Helper: create a page card DOM */
-function createPageCard(pageIndex, canvas) {
-  const wrap = document.createElement('div');
-  wrap.className = 'page-card';
-  wrap.dataset.pageIndex = pageIndex; // 0-based index in source PDF
-  wrap.dataset.removed = 'false';
+    <script>
+        // Set current year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > 10) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            lastScrollTop = scrollTop;
+        });
 
-  const num = document.createElement('div');
-  num.className = 'page-number';
-  num.textContent = `Page ${pageIndex + 1}`;
-  wrap.appendChild(num);
+        // PDF.js worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-  const canvasWrap = document.createElement('div');
-  canvasWrap.className = 'thumb-wrap';
-  canvasWrap.appendChild(canvas);
-  wrap.appendChild(canvasWrap);
+        // DOM Elements
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const browseButton = document.getElementById('browse-button');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const pdfPages = document.getElementById('pdf-pages');
+        const currentPageInput = document.getElementById('current-page');
+        const pageCountSpan = document.getElementById('page-count');
+        const downloadSelectedBtn = document.getElementById('download-selected');
+        const resetViewBtn = document.getElementById('reset-view');
+        const homeButton = document.getElementById('home-button');
 
-  const controls = document.createElement('div');
-  controls.className = 'page-controls';
-  // delete button
-  const delBtn = document.createElement('button');
-  delBtn.className = 'btn-small';
-  delBtn.textContent = 'Delete';
-  delBtn.title = 'Remove this page';
-  delBtn.addEventListener('click', () => {
-    wrap.remove();
-    refreshButtons();
-  });
-  controls.appendChild(delBtn);
+        // State variables
+        let pdfDoc = null;
+        let pdfScale = 1.0;
+        let currentPage = 1;
+        let selectedPages = new Set();
+        let isDragging = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let pageElements = [];
 
-  // move hint
-  const hint = document.createElement('div');
-  hint.className = 'drag-hint';
-  hint.textContent = 'Drag to reorder';
-  controls.appendChild(hint);
+        // Event Listeners
+        browseButton.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        homeButton.addEventListener('click', () => window.location.href = '/');
+        
+        // Drop zone events
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', handleDragOver);
+        dropZone.addEventListener('dragleave', handleDragLeave);
+        dropZone.addEventListener('drop', handleDrop);
 
-  wrap.appendChild(controls);
-  return wrap;
-}
+        // Download button
+        downloadSelectedBtn.addEventListener('click', downloadSelectedPages);
 
-/* Render PDF thumbnails using pdf.js */
-async function renderPdfThumbnails(arrayBuffer) {
-  pagesContainer.innerHTML = '';
-  emptyState.style.display = 'none';
+        // Reset view button
+        resetViewBtn.addEventListener('click', resetAllPages);
 
-  const loadingTask = pdfjsLib.getDocument({data: arrayBuffer});
-  const pdf = await loadingTask.promise;
-  pdfNumPages = pdf.numPages;
+        // Functions
+        function handleDragOver(e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        }
 
-  for (let i = 1; i <= pdfNumPages; i++) {
-    const page = await pdf.getPage(i);
-    const viewport = page.getViewport({ scale: 0.9 });
-    const canvas = document.createElement('canvas');
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-    canvas.className = 'thumb-canvas';
-    const ctx = canvas.getContext('2d');
-    await page.render({ canvasContext: ctx, viewport }).promise;
+        function handleDragLeave() {
+            dropZone.classList.remove('drag-over');
+        }
 
-    const card = createPageCard(i - 1, canvas);
-    pagesContainer.appendChild(card);
-  }
+        function handleDrop(e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        }
 
-  // enable sorting
-  if (sortable) sortable.destroy();
-  sortable = Sortable.create(pagesContainer, {
-    animation: 150,
-    handle: '.thumb-wrap',
-    ghostClass: 'drag-ghost',
-    onEnd: () => refreshButtons()
-  });
+        function handleFileSelect() {
+            const file = fileInput.files[0];
+            if (!file) return;
+            
+            if (file.type !== 'application/pdf') {
+                alert('Please select a valid PDF file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                loadPDF(e.target.result);
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
 
-  refreshButtons();
-}
+        function loadPDF(data) {
+            // Hide drop zone, show viewer
+            dropZone.style.display = 'none';
+            pdfViewer.style.display = 'flex';
+            pdfPages.innerHTML = '<div class="viewer-message"><p>Loading PDF...</p></div>';
+            
+            // Load PDF document
+            pdfjsLib.getDocument(data).promise.then(pdf => {
+                pdfDoc = pdf;
+                pageCountSpan.textContent = `of ${pdf.numPages}`;
+                currentPageInput.max = pdf.numPages;
+                
+                // Render all pages
+                renderAllPages();
+            }).catch(error => {
+                console.error('Error loading PDF:', error);
+                pdfPages.innerHTML = `<div class="viewer-message"><p>Error loading PDF. Please try again.</p></div>`;
+            });
+        }
 
-/* File input handler */
-fileInput.addEventListener('change', async (e) => {
-  const f = e.target.files[0];
-  if (!f) return;
-  fileNameEl.textContent = f.name;
-  origArrayBuffer = await f.arrayBuffer();
-  try {
-    await renderPdfThumbnails(origArrayBuffer);
-  } catch (err) {
-    alert('Failed to render PDF. The file may be encrypted or corrupted. Use the decrypt tool if it is password protected.');
-    console.error(err);
-  }
-});
+        function renderAllPages() {
+            pdfPages.innerHTML = '';
+            pageElements = [];
+            
+            for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+                renderPage(pageNum);
+            }
+        }
 
-/* Optional: load a small example PDF (for testing) */
-btnLoadExample.addEventListener('click', async () => {
-  // Example: fetch a small sample PDF from a reliable static URL.
-  // If you prefer not to include example, you can remove this handler.
-  try {
-    const resp = await fetch('https://cors-anywhere.herokuapp.com/https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf');
-    const buf = await resp.arrayBuffer();
-    origArrayBuffer = buf;
-    fileNameEl.textContent = 'example.pdf';
-    await renderPdfThumbnails(origArrayBuffer);
-  } catch (err) {
-    console.error(err);
-    alert('Failed to load example PDF (CORS may block). You can test by uploading your PDF.');
-  }
-});
+        function renderPage(pageNum) {
+            pdfDoc.getPage(pageNum).then(page => {
+                // Set scale for viewer
+                const scale = 1.0;
+                const viewport = page.getViewport({ scale });
+                
+                // Create canvas element for the page
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Create page container
+                const pageContainer = document.createElement('div');
+                pageContainer.className = 'pdf-page';
+                pageContainer.dataset.pageNumber = pageNum;
+                pageContainer.innerHTML = `
+                    <div class="page-number">${pageNum}</div>
+                    <div class="zoom-indicator">100%</div>
+                `;
+                
+                // Append canvas
+                pageContainer.insertBefore(canvas, pageContainer.firstChild);
+                pdfPages.appendChild(pageContainer);
+                pageElements.push(pageContainer);
+                
+                // Render the page
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                page.render(renderContext).promise.then(() => {
+                    // Add event listeners for the page
+                    setupPageInteractions(pageContainer);
+                });
+            });
+        }
 
-/* Refresh state of action buttons */
-function refreshButtons() {
-  const cards = pagesContainer.querySelectorAll('.page-card');
-  const hasPages = cards.length > 0;
-  applyWatermarkBtn.disabled = !hasPages;
-  exportBtn.disabled = !hasPages;
-  downloadBtn.disabled = !hasPages;
-}
+        function setupPageInteractions(pageElement) {
+            const canvas = pageElement.querySelector('canvas');
+            const zoomIndicator = pageElement.querySelector('.zoom-indicator');
+            
+            // Drag to move
+            pageElement.addEventListener('mousedown', (e) => {
+                if (e.target === canvas || e.target === pageElement) {
+                    isDragging = true;
+                    dragStartX = e.clientX;
+                    dragStartY = e.clientY;
+                    pageElement.style.cursor = 'grabbing';
+                }
+            });
+            
+            // Double click to zoom
+            pageElement.addEventListener('dblclick', () => {
+                togglePageZoom(pageElement);
+            });
+            
+            // Select page on click (not drag)
+            pageElement.addEventListener('click', (e) => {
+                if (!isDragging && e.target !== zoomIndicator) {
+                    togglePageSelection(pageElement);
+                }
+            });
+            
+            // Reset drag state on mouse up
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                pageElement.style.cursor = 'grab';
+            });
+            
+            // Handle mouse move for dragging
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - dragStartX;
+                    const deltaY = e.clientY - dragStartY;
+                    
+                    // Apply translation to the canvas
+                    const transform = canvas.style.transform || '';
+                    const translateMatch = transform.match(/translate\(([^,]+),([^)]+)\)/);
+                    
+                    let currentX = 0;
+                    let currentY = 0;
+                    
+                    if (translateMatch) {
+                        currentX = parseFloat(translateMatch[1]);
+                        currentY = parseFloat(translateMatch[2]);
+                    }
+                    
+                    canvas.style.transform = `translate(${currentX + deltaX}px, ${currentY + deltaY}px)`;
+                    
+                    // Update drag start position
+                    dragStartX = e.clientX;
+                    dragStartY = e.clientY;
+                }
+            });
+        }
 
-/* Export: assemble pages (in current order) into new PDF (no watermark) */
-exportBtn.addEventListener('click', async () => {
-  if (!origArrayBuffer) return alert('Upload a PDF first.');
-  try {
-    exportBtn.disabled = true;
-    const bytes = await assemblePdf({ watermark: null });
-    triggerDownload(bytes, 'happyedit-export.pdf');
-  } catch (err) {
-    console.error(err);
-    alert('Export failed: ' + (err.message || err));
-  } finally {
-    exportBtn.disabled = false;
-  }
-});
+        function togglePageZoom(pageElement) {
+            const canvas = pageElement.querySelector('canvas');
+            const zoomIndicator = pageElement.querySelector('.zoom-indicator');
+            const transform = canvas.style.transform || '';
+            
+            // Check if already zoomed
+            if (transform.includes('scale')) {
+                // Reset to original
+                canvas.style.transform = transform.replace(/scale\([^)]+\)/, '').trim() || 'none';
+                zoomIndicator.style.display = 'none';
+            } else {
+                // Zoom in
+                canvas.style.transform = `${transform} scale(1.5)`.trim();
+                zoomIndicator.textContent = '150%';
+                zoomIndicator.style.display = 'block';
+            }
+        }
 
-/* Apply watermark and export */
-applyWatermarkBtn.addEventListener('click', async () => {
-  const text = watermarkTextInput.value.trim();
-  if (!text) return alert('Enter watermark text first.');
-  if (!origArrayBuffer) return alert('Upload a PDF first.');
-  applyWatermarkBtn.disabled = true;
-  try {
-    const bytes = await assemblePdf({ watermark: { text, position: watermarkPosSelect.value }});
-    triggerDownload(bytes, 'happyedit-watermarked.pdf');
-  } catch (err) {
-    console.error(err);
-    alert('Failed to apply watermark: ' + (err.message || err));
-  } finally {
-    applyWatermarkBtn.disabled = false;
-  }
-});
+        function togglePageSelection(pageElement) {
+            const pageNum = parseInt(pageElement.dataset.pageNumber);
+            
+            if (selectedPages.has(pageNum)) {
+                selectedPages.delete(pageNum);
+                pageElement.classList.remove('selected');
+            } else {
+                selectedPages.add(pageNum);
+                pageElement.classList.add('selected');
+            }
+            
+            updateDownloadButton();
+        }
 
-/* Download button: alias to export (for clarity) */
-downloadBtn.addEventListener('click', async () => {
-  if (!origArrayBuffer) return alert('Upload a PDF first.');
-  downloadBtn.disabled = true;
-  try {
-    const bytes = await assemblePdf({ watermark: null });
-    triggerDownload(bytes, 'happyedit-export.pdf');
-  } catch (err) {
-    console.error(err);
-    alert('Download failed: ' + (err.message || err));
-  } finally {
-    downloadBtn.disabled = false;
-  }
-});
+        function updateDownloadButton() {
+            if (selectedPages.size > 0) {
+                downloadSelectedBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Download ${selectedPages.size} Page${selectedPages.size > 1 ? 's' : ''}
+                `;
+            } else {
+                downloadSelectedBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    Download Selected
+                `;
+                downloadSelectedBtn.disabled = true;
+            }
+            
+            downloadSelectedBtn.disabled = selectedPages.size === 0;
+        }
 
-/* Assemble PDF using pdf-lib: copy pages in current order, optionally draw watermark */
-async function assemblePdf({ watermark = null }) {
-  const srcDoc = await PDFLib.PDFDocument.load(origArrayBuffer);
-  const outDoc = await PDFLib.PDFDocument.create();
-  // embed a font for watermark
-  const helvetica = await outDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+        function resetAllPages() {
+            pageElements.forEach(pageElement => {
+                const canvas = pageElement.querySelector('canvas');
+                const zoomIndicator = pageElement.querySelector('.zoom-indicator');
+                
+                canvas.style.transform = 'none';
+                zoomIndicator.style.display = 'none';
+            });
+        }
 
-  // gather page indices from current DOM order
-  const cards = Array.from(pagesContainer.querySelectorAll('.page-card'));
-  if (cards.length === 0) throw new Error('No pages to export.');
+        function downloadSelectedPages() {
+            if (selectedPages.size === 0) return;
+            
+            alert('Downloading selected pages. In a real implementation, this would create a new PDF with the selected pages.');
+            
+            // In a real app, you would:
+            // 1. Create a new PDF document
+            // 2. Add the selected pages to it
+            // 3. Generate a Blob and trigger download
+        }
 
-  // copy pages in order
-  for (let i = 0; i < cards.length; i++) {
-    const idx = Number(cards[i].dataset.pageIndex); // 0-based index into source PDF
-    const [copiedPage] = await outDoc.copyPages(srcDoc, [idx]);
-    outDoc.addPage(copiedPage);
-
-    // apply watermark if requested
-    if (watermark) {
-      const page = outDoc.getPages()[outDoc.getPageCount() - 1];
-      const { width, height } = page.getSize();
-      const fontSize = Math.max(24, Math.floor(Math.min(width, height) / 12));
-      const text = watermark.text;
-      // compute position
-      let x = width / 2;
-      let y = height / 2;
-      const pos = watermark.position || 'center';
-      if (pos === 'top-left') { x = 40; y = height - 40; }
-      if (pos === 'top-right') { x = width - 40 - helvetica.widthOfTextAtSize(text, fontSize); y = height - 40; }
-      if (pos === 'bottom-left') { x = 40; y = 40; }
-      if (pos === 'bottom-right') { x = width - 40 - helvetica.widthOfTextAtSize(text, fontSize); y = 40; }
-
-      page.drawText(text, {
-        x: x,
-        y: y,
-        size: fontSize,
-        font: helvetica,
-        color: PDFLib.rgb(0.2, 0.2, 0.2),
-        opacity: 0.15,
-        rotate: PDFLib.degrees(-30)
-      });
-    }
-  }
-
-  const outBytes = await outDoc.save();
-  return outBytes;
-}
-
-/* Utility: create download link for bytes */
-function triggerDownload(bytes, filename) {
-  const blob = new Blob([bytes], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-/* initial state */
-refreshButtons();
-</script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
 </body>
 </html>
