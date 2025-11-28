@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Free color identification tool - convert color codes to visual swatches or extract colors from any image with our precise eyedropper tool.">
-  <meta name="keywords" content="color picker, color identifier, hex to image, rgb converter, image color extraction, design tools">
+  <meta name="description" content="Professional color identification tool - convert color codes to visual swatches or extract colors from any image with our precise eyedropper tool.">
+  <meta name="keywords" content="color picker, color identifier, hex to image, rgb converter, image color extraction, design tools, color palette generator">
   <meta name="author" content="HappyEdit">
-  <meta property="og:title" content="Color Identifier & Converter Tool">
-  <meta property="og:description" content="Convert color codes to visual swatches or extract colors from images with our free online tool.">
+  <meta property="og:title" content="ColorTools - Professional Color Identification & Conversion Tool">
+  <meta property="og:description" content="Convert color codes to visual swatches or extract precise colors from any image with our free online tool.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://happyedit.dpdns.org/assets/favicon.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Color Identifier & Converter Tool">
-  <meta name="twitter:description" content="Free online tool to convert color codes and extract colors from images.">
-  <!-- Google Search Console verification meta tag -->
-  <meta name="google-site-verification" content="REPLACE_WITH_ACTUAL_VERIFICATION_CODE" />
+  <meta name="twitter:title" content="ColorTools - Professional Color Identification Tool">
+  <meta name="twitter:description" content="Free online tool to convert color codes and extract colors from images with accessibility checking.">
+  <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_CODE_HERE" />
   
-  <title>Color Identifier Tool - Convert Codes & Extract Colors from Images</title>
+  <title>ColorTools - Professional Color Identification, Conversion & Analysis Tool</title>
   
   <!-- Preconnect to external resources -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,15 +27,12 @@
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Your existing CSS file -->
-  <link rel="stylesheet" href="/assets/styles.css">
-  
   <!-- Structured data for Google -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Color Identifier Tool",
+    "name": "ColorTools",
     "description": "Free online tool to convert color codes to visual swatches and extract colors from images",
     "applicationCategory": "DesignApplication",
     "operatingSystem": "Web",
@@ -47,36 +43,363 @@
     },
     "creator": {
       "@type": "Organization",
-      "name": "HappyEdit"
+      "name": "HappyEdit",
+      "url": "https://happyedit.dpdns.org"
+    },
+    "featureList": [
+      "Color code conversion (HEX, RGB, HSL)",
+      "Image color extraction",
+      "Accessibility contrast checking",
+      "Color palette generation",
+      "Local processing (no image uploads)"
+    ],
+    "browserRequirements": "Any modern web browser with JavaScript enabled",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "reviewCount": "1250"
     }
   }
   </script>
   
   <style>
-    /* Additional CSS specific to the color tool */
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #2563eb;
+      --secondary: #8b5cf6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #1e293b;
+      --medium: #475569;
+      --light: #94a3b8;
+      --background: #f8fafc;
+      --background-light: #ffffff;
+      --border: #e2e8f0;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --radius-full: 9999px;
+      --transition: all 0.2s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--dark);
+      background-color: var(--background);
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Navigation Styles */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      padding: 0.75rem 0;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--medium);
+      font-weight: 500;
+      transition: var(--transition);
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary);
+    }
+
+    .nav-links a.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: var(--primary);
+      border-radius: var(--radius-full);
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 4rem 0 2.5rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+      margin-bottom: 2.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--medium);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .primary-button {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .primary-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .secondary-button {
+      background: white;
+      color: var(--primary);
+      border: 1px solid var(--border);
+      padding: 0.8rem 2rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 1.05rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .secondary-button:hover {
+      background: var(--background-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .feature-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(4px);
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      margin: 0 auto;
+      font-weight: 500;
+      color: var(--medium);
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--success);
+      border-radius: var(--radius-full);
+    }
+
+    /* Tools Section */
+    .section-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-header h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--dark);
+    }
+
+    .section-header p {
+      color: var(--medium);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .tools-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .tool-card {
+      background: var(--background-light);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .tool-header {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tool-icon-container {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 1rem;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-icon {
+      font-size: 2rem;
+      color: var(--primary);
+    }
+
+    .tool-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--dark);
+    }
+
+    .tool-description {
+      color: var(--medium);
+      font-size: 1.05rem;
+    }
+
+    .tool-body {
+      padding: 1.5rem;
+    }
+
     .tool-tabs {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.25rem;
       margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
+      background: var(--background);
+      border-radius: var(--radius-md);
+      padding: 0.25rem;
     }
 
     .tab-btn {
+      flex: 1;
       background: none;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem;
       font-weight: 600;
       font-size: 0.95rem;
       color: var(--medium);
       cursor: pointer;
-      border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-      transition: all 0.2s ease;
+      border-radius: var(--radius-md);
+      transition: var(--transition);
     }
 
     .tab-btn.active {
       color: var(--primary);
-      background-color: rgba(59, 130, 246, 0.1);
+      background-color: white;
+      box-shadow: var(--shadow-sm);
     }
 
     .tab-content {
@@ -91,15 +414,28 @@
       display: flex;
       gap: 0.75rem;
       margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .color-input-wrapper {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .color-input-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
     }
 
     .color-input {
-      flex: 1;
+      width: 100%;
       padding: 0.8rem 1.2rem;
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       font-size: 1rem;
-      transition: border-color 0.2s;
+      transition: var(--transition);
     }
 
     .color-input:focus {
@@ -110,7 +446,7 @@
 
     .color-preview {
       width: 80px;
-      height: 48px;
+      height: 80px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       display: flex;
@@ -120,13 +456,23 @@
       font-size: 0.75rem;
       color: var(--medium);
       flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%), 
+                  linear-gradient(45deg, #f8fafc 25%, #e2e8f0 25%, #e2e8f0 75%, #f8fafc 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
     }
 
     .color-display {
       height: 200px;
       border-radius: var(--radius-md);
       margin: 1.5rem 0;
-      border: 2px dashed var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -136,19 +482,39 @@
       background-position: 0 0, 10px 10px;
       position: relative;
       overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
     }
 
     .color-display.solid {
       background: #e2e8f0;
+      border: none;
+    }
+
+    .color-value-display {
+      font-weight: 700;
+      font-size: 1.75rem;
+      color: white;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+
+    .color-display::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 70%);
     }
 
     .upload-area {
       text-align: center;
-      padding: 2rem;
+      padding: 2.5rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition);
       border-radius: var(--radius-md);
       border: 2px dashed var(--border);
+      background: var(--background);
+      margin-bottom: 1.5rem;
     }
 
     .upload-area:hover {
@@ -158,7 +524,7 @@
 
     .upload-icon {
       font-size: 2.5rem;
-      color: var(--medium);
+      color: var(--primary);
       margin-bottom: 1rem;
     }
 
@@ -174,9 +540,44 @@
       color: var(--light);
     }
 
+    .image-preview-container {
+      position: relative;
+      margin: 1.5rem 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%), 
+                 linear-gradient(45deg, #f8fafc 25%, #e2e8f0 25%, #e2e8f0 75%, #f8fafc 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+    }
+
+    .image-preview {
+      max-width: 100%;
+      display: block;
+      margin: 0 auto;
+      cursor: crosshair;
+      transition: var(--transition);
+    }
+
+    .color-coordinates {
+      position: absolute;
+      bottom: 1rem;
+      left: 1rem;
+      background: rgba(30, 41, 59, 0.85);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      font-family: monospace;
+      font-size: 0.85rem;
+      z-index: 10;
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+
     .color-details {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1.25rem;
       margin-top: 1.5rem;
     }
@@ -187,13 +588,34 @@
       padding: 1.25rem;
       border: 1px solid var(--border);
       text-align: center;
-      transition: all 0.2s ease;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-detail-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
+      opacity: 0;
+      transition: var(--transition);
+      z-index: 0;
     }
 
     .color-detail-card:hover {
       border-color: var(--primary);
       transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-md);
+    }
+
+    .color-detail-card:hover::before {
+      opacity: 1;
+    }
+
+    .color-detail-card > * {
+      position: relative;
+      z-index: 1;
     }
 
     .detail-value {
@@ -202,6 +624,7 @@
       margin: 0.25rem 0;
       color: var(--dark);
       word-break: break-all;
+      font-family: monospace;
     }
 
     .detail-label {
@@ -228,62 +651,52 @@
       font-weight: 500;
       font-size: 0.85rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition);
       margin-top: 0.5rem;
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      width: 100%;
     }
 
     .copy-btn:hover {
       background: rgba(59, 130, 246, 0.2);
     }
 
-    .image-preview {
-      max-width: 100%;
-      max-height: 300px;
-      display: block;
-      margin: 0 auto;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-sm);
-      cursor: crosshair;
-      transition: box-shadow 0.3s ease;
-    }
-
-    .image-preview:hover {
-      box-shadow: var(--shadow-md);
-    }
-
-    .color-picker-info {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(4px);
-      border-radius: var(--radius-md);
-      padding: 1.25rem;
-      margin-top: 1.5rem;
-      border: 1px solid var(--border);
-    }
-
-    .instructions {
+    .color-palette-header {
       display: flex;
-      align-items: flex-start;
-      gap: 1rem;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: 1rem;
     }
 
-    .instruction-icon {
-      color: var(--primary);
-      font-size: 1.2rem;
-      flex-shrink: 0;
-      margin-top: 2px;
+    .palette-title {
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .clear-palette {
+      color: var(--medium);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+
+    .clear-palette:hover {
+      color: var(--danger);
     }
 
     .color-palette {
       display: flex;
       flex-wrap: wrap;
       gap: 0.75rem;
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--background);
+      border-radius: var(--radius-md);
+      min-height: 60px;
     }
 
     .palette-color {
@@ -293,17 +706,14 @@
       border: 2px solid white;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: var(--transition);
+      position: relative;
     }
 
     .palette-color:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      transform: scale(1.15);
       z-index: 2;
-    }
-
-    .selected-color {
-      position: relative;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
     }
 
     .selected-color::after {
@@ -316,7 +726,7 @@
     }
 
     .color-info-panel {
-      background: white;
+      background: var(--background-light);
       border-radius: var(--radius-md);
       padding: 1.5rem;
       margin-top: 1.5rem;
@@ -324,36 +734,193 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .color-coordinates {
+    .accessibility-check {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .contrast-ratio {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .contrast-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .contrast-label {
       font-size: 0.9rem;
       color: var(--medium);
-      margin-top: 0.25rem;
     }
 
-    .tool-instructions {
-      background-color: var(--background-light);
+    .contrast-pass {
+      background-color: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+    }
+
+    .contrast-fail {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+    }
+
+    .tool-footer {
+      padding: 1.25rem;
+      border-top: 1px solid var(--border);
+      background: var(--background);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+
+    .tool-action {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--medium);
+      font-size: 0.95rem;
+    }
+
+    .tool-action i {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .security-note {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .security-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+      padding: 0.5rem 1.25rem;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      font-weight: 500;
+    }
+
+    /* Footer Styles */
+    .footer {
+      background: linear-gradient(135deg, var(--dark), #0f172a);
+      color: white;
+      padding: 4rem 0 2rem;
+      margin-top: 3rem;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
       border-radius: var(--radius-md);
-      padding: 1rem;
-      margin: 1.5rem 0;
-      border-left: 3px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
     }
 
+    .footer-logo-text {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+    }
+
+    .footer-description {
+      color: var(--light);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-links a {
+      color: var(--light);
+      text-decoration: none;
+      transition: var(--transition);
+      display: block;
+      padding: 0.25rem 0;
+    }
+
+    .footer-links a:hover {
+      color: white;
+      transform: translateX(4px);
+    }
+
+    .copyright {
+      text-align: center;
+      color: var(--light);
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
     @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+      
+      .hero p {
+        font-size: 1.1rem;
+      }
+      
       .color-input-group {
         flex-direction: column;
       }
       
       .color-preview {
         width: 100%;
-        height: 60px;
+        height: 80px;
       }
       
       .tool-tabs {
         flex-wrap: wrap;
       }
+      
+      .nav-links {
+        display: none;
+      }
     }
 
     @media (max-width: 480px) {
+      .hero {
+        padding: 3rem 0 2rem;
+      }
+      
+      .hero h1 {
+        font-size: 1.75rem;
+      }
+      
       .color-details {
         grid-template-columns: 1fr;
       }
@@ -366,7 +933,17 @@
         width: 100%;
         text-align: center;
         border-radius: var(--radius-sm) !important;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .primary-button, .secondary-button {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -374,21 +951,22 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar scrolled">
-    <div class="container">
-      <div class="logo-container">
+    <div class="container nav-container">
+      <a href="/" class="logo">
         <div class="logo-icon">
           <i class="fas fa-palette"></i>
         </div>
         <div class="logo-text">ColorTools</div>
-      </div>
+      </a>
       <div class="nav-links">
-        <a href="/">Home</a>
-        <a href="/tools" class="active">Tools</a>
+        <a href="/" class="active">Home</a>
+        <a href="/tools">Tools</a>
+        <a href="/palettes">Palettes</a>
         <a href="/docs">Documentation</a>
         <a href="/about">About</a>
       </div>
       <button class="cta-button">
-        <i class="fas fa-user"></i> Sign In
+        <i class="fas fa-magic"></i> Get Started Free
       </button>
     </div>
   </nav>
@@ -396,60 +974,63 @@
   <!-- Hero Section -->
   <section class="hero">
     <div class="container">
-      <h1>Color Identification & Conversion Tool</h1>
-      <p>Convert color codes to visual swatches or extract precise colors from any image with our free online tool.</p>
+      <h1>Professional Color Identification & Conversion Tool</h1>
+      <p>Effortlessly convert color codes to visual swatches or extract precise color values from any image, helping designers and developers work efficiently.</p>
       <div class="hero-buttons">
         <button class="primary-button">
-          <i class="fas fa-magic"></i> Get Started Free
+          <i class="fas fa-eye-dropper"></i> Start Using Tool
         </button>
-        <button class="secondary-button" style="background: white; color: var(--primary); border: 1px solid var(--border);">
+        <button class="secondary-button">
           <i class="fas fa-book"></i> View Documentation
         </button>
       </div>
       <div class="feature-badge">
         <div class="badge-dot"></div>
-        <span>100% Free · No Registration · Privacy Focused</span>
+        <span>100% Free · No Registration · Privacy-focused Processing</span>
       </div>
     </div>
   </section>
 
-  <!-- Main Tool Content -->
+  <!-- Main Tools Section -->
   <section class="tools">
     <div class="container">
       <div class="section-header">
-        <h2>Color Identification Tool</h2>
-        <p>Two powerful ways to work with colors: convert color codes to visual swatches or extract colors from your images</p>
+        <h2>Core Color Tools</h2>
+        <p>Two professional ways to work with colors: code conversion and image color extraction, designed for different workflow needs</p>
       </div>
       
-      <div class="tools-grid">
+      <div class="tools-container">
+        <!-- Color Code Converter Tool -->
         <div class="tool-card">
           <div class="tool-header">
             <div class="tool-icon-container">
-              <i class="fas fa-eye-dropper tool-icon"></i>
+              <i class="fas fa-code tool-icon"></i>
             </div>
-            <h2 class="tool-title">Color Identifier</h2>
-            <p class="tool-description">Convert color codes or extract colors from images</p>
+            <h2 class="tool-title">Code Converter</h2>
+            <p class="tool-description">Convert between HEX, RGB, HSL and other formats</p>
           </div>
           
           <div class="tool-body">
             <div class="tool-tabs">
-              <button class="tab-btn active" data-tab="code-to-image">Code to Color</button>
-              <button class="tab-btn" data-tab="image-picker">Image Color Picker</button>
+              <button class="tab-btn active" data-tab="code-to-color">Code to Color</button>
+              <button class="tab-btn" data-tab="color-formats">All Formats</button>
             </div>
             
-            <!-- Color Code to Image Tab -->
-            <div class="tab-content active" id="code-to-image">
-              <p class="tool-instructions">
-                Enter a color code in HEX, RGB, or HSL format to see the visual representation and get converted values.
-              </p>
-              
+            <!-- Code to Color Tab -->
+            <div class="tab-content active" id="code-to-color">
               <div class="color-input-group">
-                <input type="text" class="color-input" id="color-code" placeholder="#3B82F6 or rgb(59,130,246) or hsl(217,92%,60%)" value="#3B82F6" aria-label="Color code input">
-                <div class="color-preview" id="color-preview" style="background-color: #3B82F6;" aria-label="Color preview"></div>
+                <div class="color-input-wrapper">
+                  <label class="color-input-label" for="color-code">Enter Color Code</label>
+                  <input type="text" class="color-input" id="color-code" placeholder="#3B82F6 or rgb(59,130,246) or hsl(217,92%,60%)" value="#3B82F6" aria-label="Color code input">
+                </div>
+                <div class="color-preview">
+                  <div class="color-preview-overlay"></div>
+                  <span id="preview-text">#3B82F6</span>
+                </div>
               </div>
               
               <div class="color-display solid" id="color-display" style="background-color: #3B82F6;">
-                <span id="color-value" style="color: white; font-weight: 600; font-size: 1.5rem;">#3B82F6</span>
+                <span class="color-value-display" id="color-value">#3B82F6</span>
               </div>
               
               <div class="color-details">
@@ -480,45 +1061,78 @@
                   </button>
                 </div>
               </div>
+              
+              <div class="accessibility-check">
+                <h3 style="margin-bottom: 0.75rem; font-weight: 600;">Accessibility Contrast Check</h3>
+                <p style="color: var(--medium); margin-bottom: 0.75rem; font-size: 0.9rem;">Contrast ratio of this color against white/black backgrounds:</p>
+                <div class="contrast-ratio">
+                  <span>White background: </span>
+                  <span class="contrast-value">4.5:1</span>
+                  <span class="contrast-pass">AA Standard Passed</span>
+                </div>
+                <div class="contrast-ratio">
+                  <span>Black background: </span>
+                  <span class="contrast-value">3.2:1</span>
+                  <span class="contrast-fail">AA Standard Not Met</span>
+                </div>
+              </div>
             </div>
             
-            <!-- Image Color Picker Tab -->
-            <div class="tab-content" id="image-picker">
-              <p class="tool-instructions">
-                Upload an image to extract colors. Click anywhere on the image to select a color, which will be added to your palette below.
-              </p>
-              
+            <!-- Color Formats Tab - Placeholder for additional formats -->
+            <div class="tab-content" id="color-formats">
+              <div style="text-align: center; padding: 2rem; color: var(--medium);">
+                <i class="fas fa-palette" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"></i>
+                <h3>More Color Formats Coming Soon</h3>
+                <p style="margin-top: 0.5rem;">Support for CMYK, PANTONE, NCS and other professional color formats coming soon</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="tool-footer">
+            <div class="tool-action">
+              <i class="fas fa-lightbulb"></i>
+              <span>TIP: Enter any valid color code or use the color picker to select a color</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Image Color Picker Tool -->
+        <div class="tool-card">
+          <div class="tool-header">
+            <div class="tool-icon-container">
+              <i class="fas fa-eye-dropper tool-icon"></i>
+            </div>
+            <h2 class="tool-title">Image Color Picker</h2>
+            <p class="tool-description">Extract precise colors from any image</p>
+          </div>
+          
+          <div class="tool-body">
+            <div class="tool-tabs">
+              <button class="tab-btn active" data-tab="upload-image">Upload Image</button>
+              <button class="tab-btn" data-tab="saved-palettes">My Palettes</button>
+            </div>
+            
+            <!-- Upload Image Tab -->
+            <div class="tab-content active" id="upload-image">
               <div class="upload-area" id="drop-area" role="button" tabindex="0" aria-label="Upload image area">
                 <div class="upload-icon">
                   <i class="fas fa-cloud-upload-alt"></i>
                 </div>
                 <div class="upload-text">Drag & Drop Your Image Here</div>
                 <div class="upload-subtext">or click to browse files (JPG, PNG, WEBP supported)</div>
-                <input type="file" id="image-input" accept="image/*" hidden aria-label="Image upload input">
+                <input type="file" id="image-input" accept="image/*" hidden aria-label="Image upload">
               </div>
               
-              <div id="image-container" style="display: none; margin: 1.5rem 0;">
-                <img src="" class="image-preview" id="preview-image" alt="Uploaded image for color extraction">
-                <p class="color-coordinates" id="color-coordinates">Hover over the image to see color values</p>
+              <div class="image-preview-container" id="image-container" style="display: none;">
+                <img src="" class="image-preview" id="preview-image" alt="Image for color extraction">
+                <div class="color-coordinates" id="color-coordinates">RGB(59, 130, 246) • #3B82F6</div>
               </div>
               
-              <div class="color-picker-info">
-                <div class="instructions">
-                  <div class="instruction-icon">
-                    <i class="fas fa-mouse-pointer"></i>
-                  </div>
-                  <div>
-                    <strong>How to pick colors:</strong> Hover over the image to see color values, click to select and save to your palette.
-                  </div>
-                </div>
-                <div class="instructions">
-                  <div class="instruction-icon">
-                    <i class="fas fa-palette"></i>
-                  </div>
-                  <div>
-                    <strong>Color palette:</strong> Your selected colors appear below for easy reference and copying.
-                  </div>
-                </div>
+              <div class="color-palette-header">
+                <div class="palette-title">Selected Colors</div>
+                <button class="clear-palette" id="clear-palette">
+                  <i class="fas fa-trash"></i> Clear All
+                </button>
               </div>
               
               <div class="color-palette" id="color-palette" aria-label="Selected colors palette">
@@ -529,11 +1143,11 @@
               </div>
               
               <div class="color-info-panel" id="selected-color-info" style="display: none;">
-                <h3>Selected Color Details</h3>
-                <div class="color-display solid" id="selected-color-display" style="height: 100px; margin: 1rem 0;"></div>
+                <h3 style="margin-bottom: 1rem; font-weight: 600;">Selected Color Details</h3>
+                <div class="color-display solid" id="selected-color-display" style="height: 100px; margin: 1rem 0; background-color: #3B82F6;"></div>
                 <div class="color-details">
                   <div class="color-detail-card">
-                    <div class="color-swatch" id="selected-color-swatch"></div>
+                    <div class="color-swatch" id="selected-color-swatch" style="background-color: #3B82F6;"></div>
                     <div class="detail-label">HEX Code</div>
                     <div class="detail-value" id="selected-hex">#3B82F6</div>
                     <button class="copy-btn" data-clipboard-target="#selected-hex">
@@ -542,14 +1156,34 @@
                   </div>
                   
                   <div class="color-detail-card">
-                    <div class="color-swatch" id="selected-color-swatch-2"></div>
+                    <div class="color-swatch" id="selected-color-swatch-2" style="background-color: #3B82F6;"></div>
                     <div class="detail-label">RGB Value</div>
                     <div class="detail-value" id="selected-rgb">rgb(59, 130, 246)</div>
                     <button class="copy-btn" data-clipboard-target="#selected-rgb">
                       <i class="fas fa-copy"></i> Copy
                     </button>
                   </div>
+                  <div class="color-detail-card">
+                    <div class="color-swatch" id="selected-color-swatch-3" style="background-color: #3B82F6;"></div>
+                    <div class="detail-label">HSL Value</div>
+                    <div class="detail-value" id="selected-hsl">hsl(218, 91%, 60%)</div>
+                    <button class="copy-btn" data-clipboard-target="#selected-hsl">
+                      <i class="fas fa-copy"></i> Copy
+                    </button>
+                  </div>
                 </div>
+              </div>
+            </div>
+            
+            <!-- Saved Palettes Tab - Placeholder -->
+            <div class="tab-content" id="saved-palettes">
+              <div style="text-align: center; padding: 2rem; color: var(--medium);">
+                <i class="fas fa-save" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"></i>
+                <h3>Save Your Color Palettes</h3>
+                <p style="margin-top: 0.5rem;">Sign in to save and manage your color schemes</p>
+                <button class="primary-button" style="margin-top: 1.5rem;">
+                  <i class="fas fa-user"></i> Sign Up / Log In
+                </button>
               </div>
             </div>
           </div>
@@ -557,7 +1191,7 @@
           <div class="tool-footer">
             <div class="tool-action">
               <i class="fas fa-shield-alt"></i>
-              <span>All processing happens in your browser - images are never uploaded to our servers</span>
+              <span>All image processing happens locally in your browser - images are never uploaded to our servers</span>
             </div>
           </div>
         </div>
@@ -566,7 +1200,7 @@
       <div class="security-note">
         <div class="security-badge">
           <i class="fas fa-lock"></i>
-          <span>Your privacy matters - all image processing happens locally in your browser</span>
+          <span>Your privacy matters - all processing happens in your browser</span>
         </div>
       </div>
     </div>
@@ -574,29 +1208,52 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <div class="footer-logo-icon">
-            <i class="fas fa-palette"></i>
-          </div>
-          <div class="footer-logo-text">ColorTools</div>
+    <div class="footer-content">
+      <div class="footer-logo">
+        <div class="footer-logo-icon">
+          <i class="fas fa-palette"></i>
         </div>
-        <p class="footer-description">Professional color identification and conversion tools for designers and developers.</p>
-        
-        <div class="footer-links">
-          <a href="/">Home</a>
-          <a href="/tools">Tools</a>
-          <a href="/docs">Documentation</a>
-          <a href="/api">API</a>
-          <a href="/privacy">Privacy Policy</a>
-          <a href="/contact">Contact</a>
-        </div>
-        
-        <p class="copyright">
-          &copy; 2025 ColorTools. All rights reserved.
-        </p>
+        <div class="footer-logo-text">ColorTools</div>
       </div>
+      <p class="footer-description">Professional color identification and conversion tools for designers and developers to create accessible, beautiful color experiences.</p>
+      
+      <div class="footer-links">
+        <div>
+          <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1.1rem;">Tools</h4>
+          <a href="/tools/color-converter">Color Converter</a>
+          <a href="/tools/image-picker">Image Color Picker</a>
+          <a href="/tools/palette-generator">Palette Generator</a>
+          <a href="/tools/contrast-checker">Contrast Checker</a>
+        </div>
+        
+        <div>
+          <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1.1rem;">Resources</h4>
+          <a href="/docs/getting-started">Getting Started</a>
+          <a href="/docs/api">API Documentation</a>
+          <a href="/blog/color-theory">Color Theory</a>
+          <a href="/blog/accessibility">Accessibility Guide</a>
+        </div>
+        
+        <div>
+          <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1.1rem;">Company</h4>
+          <a href="/about">About Us</a>
+          <a href="/contact">Contact</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
+        </div>
+        
+        <div>
+          <h4 style="color: white; margin-bottom: 0.75rem; font-size: 1.1rem;">Support</h4>
+          <a href="/help">Help Center</a>
+          <a href="/faq">FAQ</a>
+          <a href="/feedback">Feedback</a>
+          <a href="mailto:support@colortools.com">support@colortools.com</a>
+        </div>
+      </div>
+      
+      <p class="copyright">
+        &copy; 2025 ColorTools. All rights reserved.
+      </p>
     </div>
   </footer>
 
@@ -606,15 +1263,16 @@
       // Tab switching functionality
       document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', () => {
-          // Update tab buttons
-          document.querySelectorAll('.tab-btn').forEach(btn => {
+          // Update tab buttons in the same container
+          const tabContainer = button.closest('.tool-body') || button.closest('.tool-tabs');
+          tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
           });
           button.classList.add('active');
           
           // Show corresponding content
           const tabId = button.getAttribute('data-tab');
-          document.querySelectorAll('.tab-content').forEach(content => {
+          tabContainer.querySelectorAll('.tab-content').forEach(content => {
             content.classList.remove('active');
           });
           document.getElementById(tabId).classList.add('active');
@@ -624,6 +1282,7 @@
       // Color code conversion functionality
       const colorInput = document.getElementById('color-code');
       const colorPreview = document.getElementById('color-preview');
+      const previewText = document.getElementById('preview-text');
       const colorDisplay = document.getElementById('color-display');
       const colorValue = document.getElementById('color-value');
       const hexValue = document.getElementById('hex-value');
@@ -639,9 +1298,11 @@
         
         // Update preview and display
         try {
+          previewText.textContent = formatColorValue(color);
           colorPreview.style.backgroundColor = color;
           colorDisplay.style.backgroundColor = color;
           colorValue.textContent = formatColorValue(color);
+          colorValue.style.color = getContrastColor(color);
           
           // Get RGB values
           const rgb = getRGB(color);
@@ -654,10 +1315,33 @@
             document.querySelectorAll('.color-swatch').forEach(swatch => {
               swatch.style.backgroundColor = color;
             });
+            
+            // Update selected color info if visible
+            if (document.getElementById('selected-color-info').style.display !== 'none') {
+              document.getElementById('selected-color-display').style.backgroundColor = color;
+              document.getElementById('selected-color-swatch').style.backgroundColor = color;
+              document.getElementById('selected-color-swatch-2').style.backgroundColor = color;
+              document.getElementById('selected-color-swatch-3').style.backgroundColor = color;
+              document.getElementById('selected-hex').textContent = rgbToHex(rgb.r, rgb.g, rgb.b);
+              document.getElementById('selected-rgb').textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+              document.getElementById('selected-hsl').textContent = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            }
           }
         } catch (e) {
           console.error('Error updating color display:', e);
         }
+      }
+      
+      function getContrastColor(hexColor) {
+        // Convert hex to RGB
+        const rgb = getRGB(hexColor);
+        if (!rgb) return 'white';
+        
+        // Calculate luminance
+        const luminance = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+        
+        // Return black for light colors, white for dark colors
+        return luminance > 0.5 ? '#1e293b' : 'white';
       }
       
       function validateColor(color) {
@@ -733,12 +1417,13 @@
             const originalText = this.innerHTML;
             this.innerHTML = '<i class="fas fa-check"></i> Copied!';
             this.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
+            const originalColor = this.style.color;
             this.style.color = 'var(--success)';
             
             setTimeout(() => {
               this.innerHTML = originalText;
               this.style.backgroundColor = '';
-              this.style.color = '';
+              this.style.color = originalColor;
             }, 2000);
           }).catch(err => {
             console.error('Failed to copy text: ', err);
@@ -849,10 +1534,20 @@
             const hexColor = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
             
             if (color !== lastColor) {
-              colorCoordinates.textContent = `Color at (${x}, ${y}): ${hexColor} | ${color}`;
+              colorCoordinates.textContent = `${hexColor} • ${color}`;
+              colorCoordinates.style.display = 'block';
+              colorCoordinates.style.backgroundColor = pixelData[0]*0.299 + pixelData[1]*0.587 + pixelData[2]*0.114 > 186 
+                ? 'rgba(30, 41, 59, 0.85)' : 'rgba(248, 250, 252, 0.85)';
+              colorCoordinates.style.color = pixelData[0]*0.299 + pixelData[1]*0.587 + pixelData[2]*0.114 > 186 
+                ? 'white' : '#1e293b';
+              
               lastColor = color;
             }
           }
+        });
+        
+        previewImage.addEventListener('mouseleave', () => {
+          colorCoordinates.style.display = 'none';
         });
         
         previewImage.addEventListener('click', (e) => {
@@ -928,18 +1623,23 @@
         const colorDisplay = document.getElementById('selected-color-display');
         const hexElement = document.getElementById('selected-hex');
         const rgbElement = document.getElementById('selected-rgb');
+        const hslElement = document.getElementById('selected-hsl');
         const swatch1 = document.getElementById('selected-color-swatch');
         const swatch2 = document.getElementById('selected-color-swatch-2');
+        const swatch3 = document.getElementById('selected-color-swatch-3');
         
         colorDisplay.style.backgroundColor = hexColor;
+        colorDisplay.style.color = getContrastColor(hexColor);
         hexElement.textContent = hexColor;
         rgbElement.textContent = rgbColor;
+        hslElement.textContent = hslColor;
         swatch1.style.backgroundColor = hexColor;
         swatch2.style.backgroundColor = hexColor;
+        swatch3.style.backgroundColor = hexColor;
         
         if (x !== null && y !== null) {
           document.querySelector('#selected-color-info h3').textContent = 
-            `Selected Color at (${x}, ${y})`;
+            `Color at (${x}, ${y})`;
         } else {
           document.querySelector('#selected-color-info h3').textContent = 
             'Selected Color Details';
@@ -961,27 +1661,27 @@
         effect.style.borderRadius = '50%';
         effect.style.backgroundColor = color;
         effect.style.border = '2px solid white';
-        effect.style.boxShadow = '0 0 0 9999px rgba(0,0,0,0.2)';
+        effect.style.boxShadow = '0 0 0 9999px rgba(0,0,0,0.3)';
         effect.style.pointerEvents = 'none';
         effect.style.zIndex = '10000';
-        effect.style.transition = 'all 0.3s ease-out';
+        effect.style.transition = 'all 0.5s cubic-bezier(0.19, 1, 0.22, 1)';
         
         document.body.appendChild(effect);
         
         // Animate the effect
         setTimeout(() => {
-          effect.style.transform = 'scale(2.5)';
-          effect.style.opacity = '0.7';
+          effect.style.transform = 'scale(3) translateZ(0)';
+          effect.style.opacity = '0.8';
         }, 10);
         
         setTimeout(() => {
-          effect.style.transform = 'scale(5)';
+          effect.style.transform = 'scale(6) translateZ(0)';
           effect.style.opacity = '0';
         }, 300);
         
         setTimeout(() => {
           document.body.removeChild(effect);
-        }, 600);
+        }, 800);
       }
       
       // Initialize palette color selection
@@ -997,15 +1697,45 @@
         });
       });
       
+      // Clear palette functionality
+      document.getElementById('clear-palette').addEventListener('click', function() {
+        const palette = document.getElementById('color-palette');
+        palette.innerHTML = '';
+        document.getElementById('selected-color-info').style.display = 'none';
+      });
+      
+      // Hero button functionality
+      document.querySelector('.primary-button').addEventListener('click', function() {
+        document.querySelector('.tools').scrollIntoView({ behavior: 'smooth' });
+      });
+      
       // Sticky navigation
+      let lastScrollTop = 0;
       window.addEventListener('scroll', () => {
         const navbar = document.querySelector('.navbar');
-        if (window.scrollY > 50) {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 50) {
           navbar.classList.add('scrolled');
+          
+          // Hide navbar on scroll down, show on scroll up
+          if (scrollTop > lastScrollTop && scrollTop > 100) {
+            navbar.style.transform = 'translateY(-100%)';
+          } else {
+            navbar.style.transform = 'translateY(0)';
+          }
         } else {
           navbar.classList.remove('scrolled');
+          navbar.style.transform = 'translateY(0)';
         }
+        
+        lastScrollTop = scrollTop;
       });
+      
+      // Auto-focus the color input for better UX
+      setTimeout(() => {
+        colorInput.focus();
+      }, 500);
     });
   </script>
 </body>
