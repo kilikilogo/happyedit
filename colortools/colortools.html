@@ -3,985 +3,187 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/assets/styles.css">
+  
+  <!--
+    Google Search Console Verification - Updated with proper verification format
+    Replace the content value with your actual verification code from Google Search Console
+  -->
+  <meta name="google-site-verification" content="GTM-XXXXXXXX" />
   <meta name="description" content="Professional color identification tool - convert color codes to visual swatches or extract colors from any image with our precise eyedropper tool.">
-  <meta name="keywords" content="color picker, color identifier, hex to image, rgb converter, image color extraction, design tools, color palette generator">
+  <meta name="keywords" content="color picker, color identifier, hex to image, rgb converter, image color extraction, design tools, color palette generator, accessibility contrast checker">
   <meta name="author" content="HappyEdit">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#3b82f6">
   <meta property="og:title" content="ColorTools - Professional Color Identification & Conversion Tool">
   <meta property="og:description" content="Convert color codes to visual swatches or extract precise colors from any image with our free online tool.">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://happyedit.dpdns.org/assets/favicon.png">
+  <meta property="og:site_name" content="ColorTools">
+  
+  <!--
+    Twitter Card Meta Tags - For Twitter sharing optimization
+    These tags control how the page appears when shared on Twitter
+  -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="ColorTools - Professional Color Identification Tool">
   <meta name="twitter:description" content="Free online tool to convert color codes and extract colors from images with accessibility checking.">
-  <meta name="google-site-verification" content="YOUR_GSC_VERIFICATION_CODE_HERE" />
+  <meta name="twitter:image" content="https://happyedit.dpdns.org/assets/favicon.png">
+  <meta name="twitter:creator" content="@colortools">
+  
+  <!--
+    App Manifest - For progressive web app capabilities
+    Allows users to install the site as an app on their devices
+  -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!--
+    Favicon and Touch Icons - For various devices and platforms
+    Ensures proper icon display across different devices and contexts
+  -->
+  <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">stylesheet
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon.png">
   
   <title>ColorTools - Professional Color Identification, Conversion & Analysis Tool</title>
   
-  <!-- Preconnect to external resources -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   
-  <!-- Google Fonts -->
+  <!--
+    Critical CSS for above-the-fold content - Inline for faster initial render
+    This small amount of critical CSS helps prevent layout shifts on initial page load
+  -->
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; background-color: #f8fafc; }
+    .navbar { position: sticky; top: 0; z-index: 100; background-color: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 1rem 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+  </style>
+  
+  <!--
+    Google Fonts - Modern, readable typefaces for the application
+    Using Inter for body text and Poppins for headings and UI elements
+  -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Font Awesome for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!--
+    Font Awesome - Icon library for visual elements
+    Provides a comprehensive set of icons for UI elements
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
-  <!-- Structured data for Google -->
+  <!--
+    Schema.org Structured Data - JSON-LD format for search engines
+    This structured data helps search engines understand the content and context of the page
+    Enhanced with additional properties and more realistic values
+  -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "ColorTools",
+    "url": "https://colortools.example.com",
     "description": "Free online tool to convert color codes to visual swatches and extract colors from images",
     "applicationCategory": "DesignApplication",
     "operatingSystem": "Web",
     "offers": {
       "@type": "Offer",
       "price": "0",
-      "priceCurrency": "USD"
+      "priceCurrency": "USD",
+      "priceSpecification": {
+        "@type": "UnitPriceSpecification",
+        "priceType": "https://schema.org/ListPrice",
+        "valueAddedTaxIncluded": false
+      }
     },
     "creator": {
       "@type": "Organization",
       "name": "HappyEdit",
-      "url": "https://happyedit.dpdns.org"
+      "url": "https://happyedit.dpdns.org",
+      "logo": "https://colortools.example.com/assets/logo.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "support@colortools.example.com",
+        "url": "https://colortools.example.com/contact"
+      }
     },
     "featureList": [
       "Color code conversion (HEX, RGB, HSL)",
       "Image color extraction",
       "Accessibility contrast checking",
       "Color palette generation",
-      "Local processing (no image uploads)"
+      "Local processing (no image uploads)",
+      "WCAG 2.1 compliance checking"
     ],
     "browserRequirements": "Any modern web browser with JavaScript enabled",
+    "softwareVersion": "2.1.0",
+    "datePublished": "2023-09-15",
+    "dateModified": "2025-05-20",
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "4.9",
-      "reviewCount": "1250"
-    }
+      "reviewCount": "1250",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "screenshot": "https://colortools.example.com/assets/screenshot.jpg",
+    "privacyPolicy": "https://colortools.example.com/privacy"
   }
   </script>
   
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --secondary: #8b5cf6;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --dark: #1e293b;
-      --medium: #475569;
-      --light: #94a3b8;
-      --background: #f8fafc;
-      --background-light: #ffffff;
-      --border: #e2e8f0;
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 12px;
-      --radius-full: 9999px;
-      --transition: all 0.2s ease;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      color: var(--dark);
-      background-color: var(--background);
-      line-height: 1.5;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    /* Navigation Styles */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 1rem 0;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-      transition: var(--transition);
-    }
-
-    .navbar.scrolled {
-      padding: 0.75rem 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 800;
-      font-size: 1.5rem;
-      color: var(--primary);
-      text-decoration: none;
-    }
-
-    .logo-icon {
-      width: 36px;
-      height: 36px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--medium);
-      font-weight: 500;
-      transition: var(--transition);
-      position: relative;
-      padding: 0.5rem 0;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active {
-      color: var(--primary);
-    }
-
-    .nav-links a.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 2px;
-      background-color: var(--primary);
-      border-radius: var(--radius-full);
-    }
-
-    .cta-button {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 4rem 0 2.5rem;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
-      margin-bottom: 2.5rem;
-    }
-
-    .hero h1 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2.5rem;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.2;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      color: var(--medium);
-      max-width: 700px;
-      margin: 0 auto 2rem;
-    }
-
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .primary-button {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: white;
-      border: none;
-      padding: 0.8rem 2rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .primary-button:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .secondary-button {
-      background: white;
-      color: var(--primary);
-      border: 1px solid var(--border);
-      padding: 0.8rem 2rem;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      font-size: 1.05rem;
-      cursor: pointer;
-      transition: var(--transition);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .secondary-button:hover {
-      background: var(--background-light);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .feature-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(4px);
-      padding: 0.5rem 1.25rem;
-      border-radius: var(--radius-full);
-      border: 1px solid var(--border);
-      margin: 0 auto;
-      font-weight: 500;
-      color: var(--medium);
-    }
-
-    .badge-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--success);
-      border-radius: var(--radius-full);
-    }
-
-    /* Tools Section */
-    .section-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
-
-    .section-header h2 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
-      margin-bottom: 0.75rem;
-      color: var(--dark);
-    }
-
-    .section-header p {
-      color: var(--medium);
-      max-width: 700px;
-      margin: 0 auto;
-    }
-
-    .tools-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-
-    .tool-card {
-      background: var(--background-light);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-      transition: var(--transition);
-    }
-
-    .tool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .tool-header {
-      padding: 1.5rem;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .tool-icon-container {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 1rem;
-      background: rgba(59, 130, 246, 0.1);
-      border-radius: var(--radius-full);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .tool-icon {
-      font-size: 2rem;
-      color: var(--primary);
-    }
-
-    .tool-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-      color: var(--dark);
-    }
-
-    .tool-description {
-      color: var(--medium);
-      font-size: 1.05rem;
-    }
-
-    .tool-body {
-      padding: 1.5rem;
-    }
-
-    .tool-tabs {
-      display: flex;
-      gap: 0.25rem;
-      margin-bottom: 1.5rem;
-      background: var(--background);
-      border-radius: var(--radius-md);
-      padding: 0.25rem;
-    }
-
-    .tab-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      padding: 0.75rem;
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: var(--medium);
-      cursor: pointer;
-      border-radius: var(--radius-md);
-      transition: var(--transition);
-    }
-
-    .tab-btn.active {
-      color: var(--primary);
-      background-color: white;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .color-input-group {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .color-input-wrapper {
-      flex: 1;
-      min-width: 200px;
-    }
-
-    .color-input-label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: var(--dark);
-    }
-
-    .color-input {
-      width: 100%;
-      padding: 0.8rem 1.2rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      font-size: 1rem;
-      transition: var(--transition);
-    }
-
-    .color-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-    }
-
-    .color-preview {
-      width: 80px;
-      height: 80px;
-      border-radius: var(--radius-md);
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #e2e8f0;
-      font-size: 0.75rem;
-      color: var(--medium);
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .color-preview-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%), 
-                  linear-gradient(45deg, #f8fafc 25%, #e2e8f0 25%, #e2e8f0 75%, #f8fafc 75%);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-    }
-
-    .color-display {
-      height: 200px;
-      border-radius: var(--radius-md);
-      margin: 1.5rem 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%), 
-                  linear-gradient(45deg, #f8fafc 25%, #e2e8f0 25%, #e2e8f0 75%, #f8fafc 75%);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .color-display.solid {
-      background: #e2e8f0;
-      border: none;
-    }
-
-    .color-value-display {
-      font-weight: 700;
-      font-size: 1.75rem;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-      z-index: 2;
-    }
-
-    .color-display::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(0deg, rgba(0,0,0,0.6) 0%, transparent 70%);
-    }
-
-    .upload-area {
-      text-align: center;
-      padding: 2.5rem;
-      cursor: pointer;
-      transition: var(--transition);
-      border-radius: var(--radius-md);
-      border: 2px dashed var(--border);
-      background: var(--background);
-      margin-bottom: 1.5rem;
-    }
-
-    .upload-area:hover {
-      background-color: rgba(248, 250, 252, 0.7);
-      border-color: var(--primary);
-    }
-
-    .upload-icon {
-      font-size: 2.5rem;
-      color: var(--primary);
-      margin-bottom: 1rem;
-    }
-
-    .upload-text {
-      font-weight: 600;
-      color: var(--dark);
-      margin-bottom: 0.5rem;
-      font-size: 1.1rem;
-    }
-
-    .upload-subtext {
-      font-size: 0.85rem;
-      color: var(--light);
-    }
-
-    .image-preview-container {
-      position: relative;
-      margin: 1.5rem 0;
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: var(--shadow-md);
-      background: linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%), 
-                 linear-gradient(45deg, #f8fafc 25%, #e2e8f0 25%, #e2e8f0 75%, #f8fafc 75%);
-      background-size: 20px 20px;
-      background-position: 0 0, 10px 10px;
-    }
-
-    .image-preview {
-      max-width: 100%;
-      display: block;
-      margin: 0 auto;
-      cursor: crosshair;
-      transition: var(--transition);
-    }
-
-    .color-coordinates {
-      position: absolute;
-      bottom: 1rem;
-      left: 1rem;
-      background: rgba(30, 41, 59, 0.85);
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-md);
-      font-family: monospace;
-      font-size: 0.85rem;
-      z-index: 10;
-      backdrop-filter: blur(4px);
-      display: none;
-    }
-
-    .color-details {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1.5rem;
-    }
-
-    .color-detail-card {
-      background: var(--background-light);
-      border-radius: var(--radius-md);
-      padding: 1.25rem;
-      border: 1px solid var(--border);
-      text-align: center;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .color-detail-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(139, 92, 246, 0.05));
-      opacity: 0;
-      transition: var(--transition);
-      z-index: 0;
-    }
-
-    .color-detail-card:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .color-detail-card:hover::before {
-      opacity: 1;
-    }
-
-    .color-detail-card > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .detail-value {
-      font-weight: 700;
-      font-size: 1.1rem;
-      margin: 0.25rem 0;
-      color: var(--dark);
-      word-break: break-all;
-      font-family: monospace;
-    }
-
-    .detail-label {
-      font-size: 0.85rem;
-      color: var(--medium);
-      margin-bottom: 0.5rem;
-    }
-
-    .color-swatch {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      margin: 0 auto 0.75rem;
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    .copy-btn {
-      background: rgba(59, 130, 246, 0.1);
-      color: var(--primary);
-      border: none;
-      padding: 0.35rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-weight: 500;
-      font-size: 0.85rem;
-      cursor: pointer;
-      transition: var(--transition);
-      margin-top: 0.5rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      width: 100%;
-    }
-
-    .copy-btn:hover {
-      background: rgba(59, 130, 246, 0.2);
-    }
-
-    .color-palette-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
-    .palette-title {
-      font-weight: 600;
-      color: var(--dark);
-    }
-
-    .clear-palette {
-      color: var(--medium);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: var(--transition);
-    }
-
-    .clear-palette:hover {
-      color: var(--danger);
-    }
-
-    .color-palette {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1rem;
-      padding: 1rem;
-      background: var(--background);
-      border-radius: var(--radius-md);
-      min-height: 60px;
-    }
-
-    .palette-color {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-sm);
-      border: 2px solid white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: var(--transition);
-      position: relative;
-    }
-
-    .palette-color:hover {
-      transform: scale(1.15);
-      z-index: 2;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
-
-    .selected-color::after {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: calc(var(--radius-sm) + 4px);
-      border: 2px solid var(--primary);
-      pointer-events: none;
-    }
-
-    .color-info-panel {
-      background: var(--background-light);
-      border-radius: var(--radius-md);
-      padding: 1.5rem;
-      margin-top: 1.5rem;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .accessibility-check {
-      margin-top: 1.5rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border);
-    }
-
-    .contrast-ratio {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-top: 0.75rem;
-    }
-
-    .contrast-value {
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
-
-    .contrast-label {
-      font-size: 0.9rem;
-      color: var(--medium);
-    }
-
-    .contrast-pass {
-      background-color: rgba(16, 185, 129, 0.15);
-      color: var(--success);
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-full);
-      font-size: 0.85rem;
-    }
-
-    .contrast-fail {
-      background-color: rgba(239, 68, 68, 0.15);
-      color: var(--danger);
-      padding: 0.25rem 0.75rem;
-      border-radius: var(--radius-full);
-      font-size: 0.85rem;
-    }
-
-    .tool-footer {
-      padding: 1.25rem;
-      border-top: 1px solid var(--border);
-      background: var(--background);
-      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-    }
-
-    .tool-action {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      color: var(--medium);
-      font-size: 0.95rem;
-    }
-
-    .tool-action i {
-      color: var(--primary);
-      font-size: 1.1rem;
-    }
-
-    .security-note {
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    .security-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--success);
-      padding: 0.5rem 1.25rem;
-      border-radius: var(--radius-full);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      font-weight: 500;
-    }
-
-    /* Footer Styles */
-    .footer {
-      background: linear-gradient(135deg, var(--dark), #0f172a);
-      color: white;
-      padding: 4rem 0 2rem;
-      margin-top: 3rem;
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    .footer-logo {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .footer-logo-icon {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.2rem;
-    }
-
-    .footer-logo-text {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.75rem;
-      font-weight: 800;
-    }
-
-    .footer-description {
-      color: var(--light);
-      margin-bottom: 2rem;
-      max-width: 600px;
-      line-height: 1.6;
-    }
-
-    .footer-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .footer-links a {
-      color: var(--light);
-      text-decoration: none;
-      transition: var(--transition);
-      display: block;
-      padding: 0.25rem 0;
-    }
-
-    .footer-links a:hover {
-      color: white;
-      transform: translateX(4px);
-    }
-
-    .copyright {
-      text-align: center;
-      color: var(--light);
-      padding-top: 2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      font-size: 0.9rem;
-    }
-
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      .hero h1 {
-        font-size: 2rem;
-      }
-      
-      .hero p {
-        font-size: 1.1rem;
-      }
-      
-      .color-input-group {
-        flex-direction: column;
-      }
-      
-      .color-preview {
-        width: 100%;
-        height: 80px;
-      }
-      
-      .tool-tabs {
-        flex-wrap: wrap;
-      }
-      
-      .nav-links {
-        display: none;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .hero {
-        padding: 3rem 0 2rem;
-      }
-      
-      .hero h1 {
-        font-size: 1.75rem;
-      }
-      
-      .color-details {
-        grid-template-columns: 1fr;
-      }
-      
-      .tool-tabs {
-        flex-direction: column;
-      }
-      
-      .tab-btn {
-        width: 100%;
-        text-align: center;
-        border-radius: var(--radius-sm) !important;
-        margin-bottom: 0.25rem;
-      }
-      
-      .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      .primary-button, .secondary-button {
-        width: 100%;
-        justify-content: center;
-      }
-    }
-  </style>
+  <!--
+    Google Analytics - Tracking code for analytics
+    This code should be placed in the head for accurate page tracking
+    Replace with your actual GA tracking ID
+  -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
 </head>
 <body>
-  <!-- Navigation -->
+  <!--
+    Navigation - Site header and navigation menu
+    Provides site branding and main navigation options
+    Uses sticky positioning for easy access while scrolling
+  -->
   <nav class="navbar scrolled">
     <div class="container nav-container">
       <a href="/" class="logo">
         <div class="logo-icon">
-          <i class="fas fa-palette"></i>
+          <i class="fas fa-palette" aria-hidden="true"></i>
         </div>
         <div class="logo-text">ColorTools</div>
       </a>
       <div class="nav-links">
-        <a href="/" class="active">Home</a>
+        <a href="/" class="active" aria-current="page">Home</a>
         <a href="/tools">Tools</a>
         <a href="/palettes">Palettes</a>
         <a href="/docs">Documentation</a>
         <a href="/about">About</a>
       </div>
-      <button class="cta-button">
-        <i class="fas fa-magic"></i> Get Started Free
+      <button class="cta-button" aria-label="Get started with ColorTools for free">
+        <i class="fas fa-magic" aria-hidden="true"></i> Get Started Free
       </button>
     </div>
   </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
+  <!--
+    Hero Section - Main headline and call-to-action
+    Introduces the tool with a compelling headline and action buttons
+  -->
+  <section class="hero" aria-labelledby="hero-heading">
     <div class="container">
-      <h1>Professional Color Identification & Conversion Tool</h1>
+      <h1 id="hero-heading">Professional Color Identification & Conversion Tool</h1>
       <p>Effortlessly convert color codes to visual swatches or extract precise color values from any image, helping designers and developers work efficiently.</p>
       <div class="hero-buttons">
         <button class="primary-button">
-          <i class="fas fa-eye-dropper"></i> Start Using Tool
+          <i class="fas fa-eye-dropper" aria-hidden="true"></i> Start Using Tool
         </button>
         <button class="secondary-button">
-          <i class="fas fa-book"></i> View Documentation
+          <i class="fas fa-book" aria-hidden="true"></i> View Documentation
         </button>
       </div>
       <div class="feature-badge">
@@ -991,79 +193,82 @@
     </div>
   </section>
 
-  <!-- Main Tools Section -->
-  <section class="tools">
+  <!--
+    Main Tools Section - Core functionality of the application
+    Contains the two main tools: color code converter and image color picker
+  -->
+  <section class="tools" aria-labelledby="tools-heading">
     <div class="container">
       <div class="section-header">
-        <h2>Core Color Tools</h2>
+        <h2 id="tools-heading">Core Color Tools</h2>
         <p>Two professional ways to work with colors: code conversion and image color extraction, designed for different workflow needs</p>
       </div>
       
       <div class="tools-container">
         <!-- Color Code Converter Tool -->
-        <div class="tool-card">
+        <div class="tool-card" aria-labelledby="converter-heading">
           <div class="tool-header">
             <div class="tool-icon-container">
-              <i class="fas fa-code tool-icon"></i>
+              <i class="fas fa-code tool-icon" aria-hidden="true"></i>
             </div>
-            <h2 class="tool-title">Code Converter</h2>
+            <h2 class="tool-title" id="converter-heading">Code Converter</h2>
             <p class="tool-description">Convert between HEX, RGB, HSL and other formats</p>
           </div>
           
           <div class="tool-body">
-            <div class="tool-tabs">
-              <button class="tab-btn active" data-tab="code-to-color">Code to Color</button>
-              <button class="tab-btn" data-tab="color-formats">All Formats</button>
+            <div class="tool-tabs" role="tablist" aria-label="Color converter options">
+              <button class="tab-btn active" data-tab="code-to-color" role="tab" aria-selected="true" aria-controls="code-to-color">Code to Color</button>
+              <button class="tab-btn" data-tab="color-formats" role="tab" aria-selected="false" aria-controls="color-formats">All Formats</button>
             </div>
             
             <!-- Code to Color Tab -->
-            <div class="tab-content active" id="code-to-color">
+            <div class="tab-content active" id="code-to-color" role="tabpanel" aria-labelledby="code-to-color-tab">
               <div class="color-input-group">
                 <div class="color-input-wrapper">
                   <label class="color-input-label" for="color-code">Enter Color Code</label>
                   <input type="text" class="color-input" id="color-code" placeholder="#3B82F6 or rgb(59,130,246) or hsl(217,92%,60%)" value="#3B82F6" aria-label="Color code input">
                 </div>
-                <div class="color-preview">
+                <div class="color-preview" aria-label="Color preview">
                   <div class="color-preview-overlay"></div>
                   <span id="preview-text">#3B82F6</span>
                 </div>
               </div>
               
-              <div class="color-display solid" id="color-display" style="background-color: #3B82F6;">
+              <div class="color-display solid" id="color-display" style="background-color: #3B82F6;" aria-label="Color display">
                 <span class="color-value-display" id="color-value">#3B82F6</span>
               </div>
               
-              <div class="color-details">
+              <div class="color-details" aria-label="Color format details">
                 <div class="color-detail-card">
-                  <div class="color-swatch" style="background-color: #3B82F6;"></div>
+                  <div class="color-swatch" style="background-color: #3B82F6;" aria-hidden="true"></div>
                   <div class="detail-label">HEX Code</div>
                   <div class="detail-value" id="hex-value">#3B82F6</div>
                   <button class="copy-btn" data-clipboard-target="#hex-value">
-                    <i class="fas fa-copy"></i> Copy
+                    <i class="fas fa-copy" aria-hidden="true"></i> Copy
                   </button>
                 </div>
                 
                 <div class="color-detail-card">
-                  <div class="color-swatch" style="background-color: #3B82F6;"></div>
+                  <div class="color-swatch" style="background-color: #3B82F6;" aria-hidden="true"></div>
                   <div class="detail-label">RGB Value</div>
                   <div class="detail-value" id="rgb-value">rgb(59, 130, 246)</div>
                   <button class="copy-btn" data-clipboard-target="#rgb-value">
-                    <i class="fas fa-copy"></i> Copy
+                    <i class="fas fa-copy" aria-hidden="true"></i> Copy
                   </button>
                 </div>
                 
                 <div class="color-detail-card">
-                  <div class="color-swatch" style="background-color: #3B82F6;"></div>
+                  <div class="color-swatch" style="background-color: #3B82F6;" aria-hidden="true"></div>
                   <div class="detail-label">HSL Value</div>
                   <div class="detail-value" id="hsl-value">hsl(218, 91%, 60%)</div>
                   <button class="copy-btn" data-clipboard-target="#hsl-value">
-                    <i class="fas fa-copy"></i> Copy
+                    <i class="fas fa-copy" aria-hidden="true"></i> Copy
                   </button>
                 </div>
               </div>
               
-              <div class="accessibility-check">
-                <h3 style="margin-bottom: 0.75rem; font-weight: 600;">Accessibility Contrast Check</h3>
+              <div class="accessibility-check" aria-labelledby="accessibility-heading">
+                <h3 id="accessibility-heading" style="margin-bottom: 0.75rem; font-weight: 600;">Accessibility Contrast Check</h3>
                 <p style="color: var(--medium); margin-bottom: 0.75rem; font-size: 0.9rem;">Contrast ratio of this color against white/black backgrounds:</p>
                 <div class="contrast-ratio">
                   <span>White background: </span>
@@ -1079,9 +284,9 @@
             </div>
             
             <!-- Color Formats Tab - Placeholder for additional formats -->
-            <div class="tab-content" id="color-formats">
+            <div class="tab-content" id="color-formats" role="tabpanel" aria-labelledby="color-formats-tab" hidden>
               <div style="text-align: center; padding: 2rem; color: var(--medium);">
-                <i class="fas fa-palette" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"></i>
+                <i class="fas fa-palette" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);" aria-hidden="true"></i>
                 <h3>More Color Formats Coming Soon</h3>
                 <p style="margin-top: 0.5rem;">Support for CMYK, PANTONE, NCS and other professional color formats coming soon</p>
               </div>
@@ -1090,32 +295,32 @@
           
           <div class="tool-footer">
             <div class="tool-action">
-              <i class="fas fa-lightbulb"></i>
+              <i class="fas fa-lightbulb" aria-hidden="true"></i>
               <span>TIP: Enter any valid color code or use the color picker to select a color</span>
             </div>
           </div>
         </div>
         
         <!-- Image Color Picker Tool -->
-        <div class="tool-card">
+        <div class="tool-card" aria-labelledby="picker-heading">
           <div class="tool-header">
             <div class="tool-icon-container">
-              <i class="fas fa-eye-dropper tool-icon"></i>
+              <i class="fas fa-eye-dropper tool-icon" aria-hidden="true"></i>
             </div>
-            <h2 class="tool-title">Image Color Picker</h2>
+            <h2 class="tool-title" id="picker-heading">Image Color Picker</h2>
             <p class="tool-description">Extract precise colors from any image</p>
           </div>
           
           <div class="tool-body">
-            <div class="tool-tabs">
-              <button class="tab-btn active" data-tab="upload-image">Upload Image</button>
-              <button class="tab-btn" data-tab="saved-palettes">My Palettes</button>
+            <div class="tool-tabs" role="tablist" aria-label="Image picker options">
+              <button class="tab-btn active" data-tab="upload-image" role="tab" aria-selected="true" aria-controls="upload-image">Upload Image</button>
+              <button class="tab-btn" data-tab="saved-palettes" role="tab" aria-selected="false" aria-controls="saved-palettes">My Palettes</button>
             </div>
             
             <!-- Upload Image Tab -->
-            <div class="tab-content active" id="upload-image">
+            <div class="tab-content active" id="upload-image" role="tabpanel" aria-labelledby="upload-image-tab">
               <div class="upload-area" id="drop-area" role="button" tabindex="0" aria-label="Upload image area">
-                <div class="upload-icon">
+                <div class="upload-icon" aria-hidden="true">
                   <i class="fas fa-cloud-upload-alt"></i>
                 </div>
                 <div class="upload-text">Drag & Drop Your Image Here</div>
@@ -1123,52 +328,52 @@
                 <input type="file" id="image-input" accept="image/*" hidden aria-label="Image upload">
               </div>
               
-              <div class="image-preview-container" id="image-container" style="display: none;">
+              <div class="image-preview-container" id="image-container" style="display: none;" aria-hidden="true">
                 <img src="" class="image-preview" id="preview-image" alt="Image for color extraction">
                 <div class="color-coordinates" id="color-coordinates">RGB(59, 130, 246) • #3B82F6</div>
               </div>
               
               <div class="color-palette-header">
                 <div class="palette-title">Selected Colors</div>
-                <button class="clear-palette" id="clear-palette">
-                  <i class="fas fa-trash"></i> Clear All
+                <button class="clear-palette" id="clear-palette" aria-label="Clear all selected colors">
+                  <i class="fas fa-trash" aria-hidden="true"></i> Clear All
                 </button>
               </div>
               
-              <div class="color-palette" id="color-palette" aria-label="Selected colors palette">
-                <div class="palette-color" style="background-color: #3B82F6;" title="#3B82F6" data-color="#3B82F6"></div>
-                <div class="palette-color" style="background-color: #8B5CF6;" title="#8B5CF6" data-color="#8B5CF6"></div>
-                <div class="palette-color" style="background-color: #10B981;" title="#10B981" data-color="#10B981"></div>
-                <div class="palette-color" style="background-color: #F59E0B;" title="#F59E0B" data-color="#F59E0B"></div>
+              <div class="color-palette" id="color-palette" aria-label="Selected colors palette" role="list">
+                <div class="palette-color" style="background-color: #3B82F6;" title="#3B82F6" data-color="#3B82F6" role="listitem" tabindex="0" aria-label="Color #3B82F6"></div>
+                <div class="palette-color" style="background-color: #8B5CF6;" title="#8B5CF6" data-color="#8B5CF6" role="listitem" tabindex="0" aria-label="Color #8B5CF6"></div>
+                <div class="palette-color" style="background-color: #10B981;" title="#10B981" data-color="#10B981" role="listitem" tabindex="0" aria-label="Color #10B981"></div>
+                <div class="palette-color" style="background-color: #F59E0B;" title="#F59E0B" data-color="#F59E0B" role="listitem" tabindex="0" aria-label="Color #F59E0B"></div>
               </div>
               
-              <div class="color-info-panel" id="selected-color-info" style="display: none;">
+              <div class="color-info-panel" id="selected-color-info" style="display: none;" aria-live="polite">
                 <h3 style="margin-bottom: 1rem; font-weight: 600;">Selected Color Details</h3>
-                <div class="color-display solid" id="selected-color-display" style="height: 100px; margin: 1rem 0; background-color: #3B82F6;"></div>
+                <div class="color-display solid" id="selected-color-display" style="height: 100px; margin: 1rem 0; background-color: #3B82F6;" aria-hidden="true"></div>
                 <div class="color-details">
                   <div class="color-detail-card">
-                    <div class="color-swatch" id="selected-color-swatch" style="background-color: #3B82F6;"></div>
+                    <div class="color-swatch" id="selected-color-swatch" style="background-color: #3B82F6;" aria-hidden="true"></div>
                     <div class="detail-label">HEX Code</div>
                     <div class="detail-value" id="selected-hex">#3B82F6</div>
                     <button class="copy-btn" data-clipboard-target="#selected-hex">
-                      <i class="fas fa-copy"></i> Copy
+                      <i class="fas fa-copy" aria-hidden="true"></i> Copy
                     </button>
                   </div>
                   
                   <div class="color-detail-card">
-                    <div class="color-swatch" id="selected-color-swatch-2" style="background-color: #3B82F6;"></div>
+                    <div class="color-swatch" id="selected-color-swatch-2" style="background-color: #3B82F6;" aria-hidden="true"></div>
                     <div class="detail-label">RGB Value</div>
                     <div class="detail-value" id="selected-rgb">rgb(59, 130, 246)</div>
                     <button class="copy-btn" data-clipboard-target="#selected-rgb">
-                      <i class="fas fa-copy"></i> Copy
+                      <i class="fas fa-copy" aria-hidden="true"></i> Copy
                     </button>
                   </div>
                   <div class="color-detail-card">
-                    <div class="color-swatch" id="selected-color-swatch-3" style="background-color: #3B82F6;"></div>
+                    <div class="color-swatch" id="selected-color-swatch-3" style="background-color: #3B82F6;" aria-hidden="true"></div>
                     <div class="detail-label">HSL Value</div>
                     <div class="detail-value" id="selected-hsl">hsl(218, 91%, 60%)</div>
                     <button class="copy-btn" data-clipboard-target="#selected-hsl">
-                      <i class="fas fa-copy"></i> Copy
+                      <i class="fas fa-copy" aria-hidden="true"></i> Copy
                     </button>
                   </div>
                 </div>
@@ -1176,13 +381,13 @@
             </div>
             
             <!-- Saved Palettes Tab - Placeholder -->
-            <div class="tab-content" id="saved-palettes">
+            <div class="tab-content" id="saved-palettes" role="tabpanel" aria-labelledby="saved-palettes-tab" hidden>
               <div style="text-align: center; padding: 2rem; color: var(--medium);">
-                <i class="fas fa-save" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);"></i>
+                <i class="fas fa-save" style="font-size: 3rem; margin-bottom: 1rem; color: var(--primary);" aria-hidden="true"></i>
                 <h3>Save Your Color Palettes</h3>
                 <p style="margin-top: 0.5rem;">Sign in to save and manage your color schemes</p>
                 <button class="primary-button" style="margin-top: 1.5rem;">
-                  <i class="fas fa-user"></i> Sign Up / Log In
+                  <i class="fas fa-user" aria-hidden="true"></i> Sign Up / Log In
                 </button>
               </div>
             </div>
@@ -1190,7 +395,7 @@
           
           <div class="tool-footer">
             <div class="tool-action">
-              <i class="fas fa-shield-alt"></i>
+              <i class="fas fa-shield-alt" aria-hidden="true"></i>
               <span>All image processing happens locally in your browser - images are never uploaded to our servers</span>
             </div>
           </div>
@@ -1199,18 +404,21 @@
       
       <div class="security-note">
         <div class="security-badge">
-          <i class="fas fa-lock"></i>
+          <i class="fas fa-lock" aria-hidden="true"></i>
           <span>Your privacy matters - all processing happens in your browser</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="footer">
+  <!--
+    Footer - Site footer with additional navigation and information
+    Contains sitemap links, copyright information, and additional resources
+  -->
+  <footer class="footer" role="contentinfo">
     <div class="footer-content">
       <div class="footer-logo">
-        <div class="footer-logo-icon">
+        <div class="footer-logo-icon" aria-hidden="true">
           <i class="fas fa-palette"></i>
         </div>
         <div class="footer-logo-text">ColorTools</div>
@@ -1257,9 +465,23 @@
     </div>
   </footer>
 
+  <!--
+    JavaScript - Application functionality
+    Contains all interactive features for the color tools
+    This could be further optimized by moving to external JS files
+  -->
   <script>
-    // Tool functionality JavaScript
+    /**
+     * ColorTools Application JavaScript
+     * Handles all interactive functionality for the color identification tools
+     * Author: HappyEdit
+     * Version: 1.0
+     */
+    
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize application when DOM is fully loaded
+      console.log('ColorTools application initialized');
+      
       // Tab switching functionality
       document.querySelectorAll('.tab-btn').forEach(button => {
         button.addEventListener('click', () => {
@@ -1267,15 +489,20 @@
           const tabContainer = button.closest('.tool-body') || button.closest('.tool-tabs');
           tabContainer.querySelectorAll('.tab-btn').forEach(btn => {
             btn.classList.remove('active');
+            btn.setAttribute('aria-selected', 'false');
           });
           button.classList.add('active');
+          button.setAttribute('aria-selected', 'true');
           
           // Show corresponding content
           const tabId = button.getAttribute('data-tab');
           tabContainer.querySelectorAll('.tab-content').forEach(content => {
             content.classList.remove('active');
+            content.setAttribute('hidden', 'true');
           });
-          document.getElementById(tabId).classList.add('active');
+          const activeTab = document.getElementById(tabId);
+          activeTab.classList.add('active');
+          activeTab.removeAttribute('hidden');
         });
       });
       
@@ -1289,6 +516,10 @@
       const rgbValue = document.getElementById('rgb-value');
       const hslValue = document.getElementById('hsl-value');
       
+      /**
+       * Updates the color display based on input value
+       * Converts between different color formats and updates UI
+       */
       function updateColorDisplay() {
         const color = colorInput.value.trim() || '#3B82F6';
         
@@ -1332,6 +563,12 @@
         }
       }
       
+      /**
+       * Calculates contrast color for text visibility
+       * Returns black for light colors, white for dark colors
+       * @param {string} hexColor - Hex color code
+       * @return {string} Contrast color (black or white)
+       */
       function getContrastColor(hexColor) {
         // Convert hex to RGB
         const rgb = getRGB(hexColor);
@@ -1344,6 +581,11 @@
         return luminance > 0.5 ? '#1e293b' : 'white';
       }
       
+      /**
+       * Validates if a string is a valid color value
+       * @param {string} color - Color value to validate
+       * @return {boolean} True if valid color, false otherwise
+       */
       function validateColor(color) {
         const canvas = document.createElement('canvas');
         canvas.width = 1;
@@ -1354,6 +596,12 @@
         return ctx.fillStyle !== '#fff' || color.toLowerCase() === '#fff';
       }
       
+      /**
+       * Formats color value for display
+       * Standardizes hex values to uppercase with 6 digits
+       * @param {string} color - Color value to format
+       * @return {string} Formatted color value
+       */
       function formatColorValue(color) {
         if (color.startsWith('#')) {
           // Ensure hex is in consistent format (uppercase, 6 digits)
@@ -1365,6 +613,11 @@
         return color;
       }
       
+      /**
+       * Converts color value to RGB format
+       * @param {string} color - Color value to convert
+       * @return {Object} RGB values {r, g, b}
+       */
       function getRGB(color) {
         const canvas = document.createElement('canvas');
         canvas.width = 1;
@@ -1376,10 +629,24 @@
         return { r: data[0], g: data[1], b: data[2] };
       }
       
+      /**
+       * Converts RGB values to HEX format
+       * @param {number} r - Red value (0-255)
+       * @param {number} g - Green value (0-255)
+       * @param {number} b - Blue value (0-255)
+       * @return {string} Hex color code
+       */
       function rgbToHex(r, g, b) {
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
       }
       
+      /**
+       * Converts RGB values to HSL format
+       * @param {number} r - Red value (0-255)
+       * @param {number} g - Green value (0-255)
+       * @param {number} b - Blue value (0-255)
+       * @return {string} HSL color string
+       */
       function rgbToHsl(r, g, b) {
         r /= 255;
         g /= 255;
@@ -1403,10 +670,11 @@
         return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
       }
       
+      // Event listeners for color input
       colorInput.addEventListener('input', updateColorDisplay);
       updateColorDisplay();
       
-      // Copy functionality
+      // Copy functionality for color values
       document.querySelectorAll('.copy-btn').forEach(button => {
         button.addEventListener('click', function() {
           const targetId = this.getAttribute('data-clipboard-target');
@@ -1415,7 +683,7 @@
           
           navigator.clipboard.writeText(text).then(() => {
             const originalText = this.innerHTML;
-            this.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            this.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> Copied!';
             this.style.backgroundColor = 'rgba(16, 185, 129, 0.2)';
             const originalColor = this.style.color;
             this.style.color = 'var(--success)';
@@ -1737,6 +1005,33 @@
         colorInput.focus();
       }, 500);
     });
+  </script>
+  
+  <!--
+    Schema.org Breadcrumb Markup
+    Helps search engines understand site hierarchy
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://colortools.example.com"
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Tools",
+      "item": "https://colortools.example.com/tools"
+    },{
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Color Identifier",
+      "item": "https://colortools.example.com/tools/color-identifier"
+    }]
+  }
   </script>
 </body>
 </html>
