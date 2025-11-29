@@ -145,6 +145,7 @@
   </script>
 </head>
 <body>
+  <script src="/colortools/colortools.js"></script>
   <!--
     Navigation - Site header and navigation menu
     Provides site branding and main navigation options
@@ -1034,79 +1035,6 @@
     }]
   }
   </script>
-  <script>
-    function isValidColor(value) {
-      const s = new Option().style;
-      s.color = value;
-      return s.color !== '';
-    }
-    
-    function hexToRgb(hex) {
-      hex = hex.replace("#", "");
-      if (hex.length === 3) {
-        hex = hex.split("").map(c => c + c).join("");
-      }
-      const bigint = parseInt(hex, 16);
-      return {
-        r: (bigint >> 16) & 255,
-        g: (bigint >> 8) & 255,
-        b: bigint & 255,
-      };
-    }
-    
-    function rgbToHsl(r, g, b) {
-      r /= 255; g /= 255; b /= 255;
-      const max = Math.max(r,g,b), min = Math.min(r,g,b);
-      let h, s, l = (max + min) / 2;
-      if (max === min) { h = s = 0; }
-      else {
-        const d = max - min;
-        s = l > .5 ? d / (2 - max - min) : d / (max + min);
-        switch(max){
-          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-          case g: h = (b - r) / d + 2; break;
-          case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-      }
-      return {
-        h: Math.round(h*360),
-        s: Math.round(s*100),
-        l: Math.round(l*100),
-      };
-    }
-    
-    function updateColorDisplay(value) {
-      if (!isValidColor(value)) return;
-    
-      document.getElementById("color-display").style.backgroundColor = value;
-      document.getElementById("preview-text").textContent = value;
-    
-      let rgb, hex, hsl;
-    
-      if (value.startsWith("#")) {
-        hex = value.toUpperCase();
-        rgb = hexToRgb(value);
-        hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      } else if (value.startsWith("rgb")) {
-        const nums = value.match(/\d+/g).map(Number);
-        rgb = { r: nums[0], g: nums[1], b: nums[2] };
-        hex = "#" + ((1 << 24) + (rgb.r << 16) + (rgb.g << 8) + rgb.b)
-          .toString(16).slice(1).toUpperCase();
-        hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      }
-    
-      document.getElementById("hex-value").textContent = hex;
-      document.getElementById("rgb-value").textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-      document.getElementById("hsl-value").textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-    
-      document.querySelectorAll(".color-swatch").forEach(s => s.style.backgroundColor = hex);
-    }
-    
-    document.getElementById("color-code").addEventListener("input", function () {
-      updateColorDisplay(this.value);
-    });
-    </script>
-    
+  
 </body>
 </html>
